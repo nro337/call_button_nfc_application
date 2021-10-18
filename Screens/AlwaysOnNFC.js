@@ -1,14 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Button, Image, Platform, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 
-import { Images } from './App/Themes/';
 import NfcManager, { NfcTech, Ndef, NfcEvents } from "react-native-nfc-manager";
 
-import AppNavigation from "./Navigation/AppNavigation";
 
-
-export default function App() {
+export default function AlwaysOnNFC() {
   useEffect(() => {
     initNfc();
   });
@@ -86,41 +83,13 @@ export default function App() {
     });
   }
 
-
-
-
-
-
   return (
-    <SafeAreaView style={styles.safeAreaViewContainer}>
-      <StatusBar />
-      <View style={styles.container}>
-        <AppNavigation />
-      {/* <Text>NFC Read/Write MVP</Text>
+    <View style={styles.container}>
+      <Text>NFC Read/Write MVP</Text>
       <StatusBar style="auto" />
       <Button title="Write" onPress={writeNdef}></Button>
       <Button title="Read" onPress={readNdef}></Button>
-      <Text>{scanMessage}</Text> */}
+      <Text>{scanMessage}</Text>
     </View>
-    </SafeAreaView>
-
   );
 }
-
-const styles = StyleSheet.create({
-  safeAreaViewContainer: {
-    backgroundColor: 'black'
-  },
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "black",
-    alignItems: "stretch",
-    justifyContent: "center",
-    ...Platform.select({
-      ios: {
-        height: Dimensions.get('window').height,
-      }
-    })
-  },
-});
