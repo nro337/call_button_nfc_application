@@ -20,6 +20,8 @@ PODS:
     - UMCore
   - EXKeepAwake (9.2.0):
     - UMCore
+  - EXLinearGradient (9.2.0):
+    - UMCore
   - expo-dev-client (0.5.1):
     - expo-dev-launcher
     - expo-dev-menu
@@ -372,6 +374,7 @@ DEPENDENCIES:
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - expo-dev-client (from `../node_modules/expo-dev-client`)
   - expo-dev-launcher (from `../node_modules/expo-dev-launcher`)
   - expo-dev-menu (from `../node_modules/expo-dev-menu`)
@@ -439,6 +442,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-image-loader/ios"
   EXKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
+  EXLinearGradient:
+    :path: "../node_modules/expo-linear-gradient/ios"
   expo-dev-client:
     :path: "../node_modules/expo-dev-client"
   expo-dev-launcher:
@@ -536,6 +541,7 @@ SPEC CHECKSUMS:
   EXFont: cb2350960187470ec54ff4668755abb74fde9839
   EXImageLoader: 6494524ac2b99af4edcacada0e19c71600423e59
   EXKeepAwake: db7607300383508b9ccf1da5bed4eab541f53e25
+  EXLinearGradient: 39c0836741b28dc4b7a07065e921de00abae47f3
   expo-dev-client: 2dcd5569fe2f663fe19ddbd3b88b566bc272b7b3
   expo-dev-launcher: b74028cd12d3a1546fc86dbf7470b301b0219502
   expo-dev-menu: c6ec156b6dbc1099389749f2ddf9ed76f9a56063

@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Images } from "../App/Themes/";
+// import { LinearGradient } from 'expo-linear-gradient';
 
 export default function FunctionSelectScreen({ navigation }) {
   return (
@@ -28,7 +29,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "black"
+    //backgroundColor: "black",
+    //background: linear-gradient(180deg, #9D9EC1 0%, #CCDCEF 82.81%);
+
+    ...Platform.select({
+      ios: {
+        height: Dimensions.get('window').height - 90,
+      }
+    })
   },
   logo: {
     height: '50%',
