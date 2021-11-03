@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import FunctionSelectScreen from "../Screens/FunctionSelectScreen";
+import TemplateScreen from "../Screens/TemplateScreen";
 
 const Stack = createStackNavigator();
 
@@ -19,7 +20,11 @@ export default function AppNavigation() {
       {/* <MyStack /> */}
       <Stack.Navigator>
       <Stack.Screen
-        name="Home"
+        name="TemplateScreen"
+        component={TemplateScreen}
+      />
+      <Stack.Screen
+        name="FunctionSelectScreen"
         component={FunctionSelectScreen}
       />
     </Stack.Navigator>
