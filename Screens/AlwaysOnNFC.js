@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button, Dimensions } from "react-native";
 
 import NfcManager, { NfcTech, Ndef, NfcEvents } from "react-native-nfc-manager";
 
@@ -93,3 +93,40 @@ export default function AlwaysOnNFC() {
     </View>
   );
 }
+
+
+
+const styles = StyleSheet.create({
+  safeAreaViewContainer: {
+    backgroundColor: 'black'
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "black",
+    alignItems: "stretch",
+    justifyContent: "center",
+    ...Platform.select({
+      ios: {
+        height: Dimensions.get('window').height,
+      }
+    })
+  },
+  logo: {
+    height: '50%',
+    width: '50%',
+    resizeMode: 'contain',
+  },
+  container2: {
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "#090C68",
+    alignItems: "center",
+    justifyContent: "center",
+    ...Platform.select({
+      ios: {
+        height: Dimensions.get('window').height,
+      }
+    })
+  },
+});

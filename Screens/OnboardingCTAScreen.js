@@ -21,7 +21,7 @@ export default function OnboardingCTAScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.headerText}>Keep Care at your Fingertips</Text>
         <Image style={styles.logo} source={Images.onBoardingHandAsset} />
-        <CustButton title="Get Started" icon="chevron-forward-outline" size={20} color="white" onPress={() => navigation.navigate('FunctionSelectScreen')}></CustButton>
+        <CustButton title="Get Started" icon="chevron-forward-outline" size={20} fontSize={30} color="white" backgroundColor="#090C68" onPress={() => navigation.navigate('Function Select Screen')}></CustButton>
       </View>
     </View>
   );

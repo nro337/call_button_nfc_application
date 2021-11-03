@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import FunctionSelectScreen from "../Screens/FunctionSelectScreen";
 import OnboardingCTAScreen from "../Screens/OnboardingCTAScreen";
+import AlwaysOnNFC from "../Screens/AlwaysOnNFC";
 
 const Stack = createStackNavigator();
 
@@ -20,12 +21,16 @@ export default function AppNavigation() {
       {/* <MyStack /> */}
       <Stack.Navigator>
       <Stack.Screen
-        name="OnboardingCTAScreen"
+        name="Onboarding"
         component={OnboardingCTAScreen}
       />
       <Stack.Screen
-        name="FunctionSelectScreen"
+        name="Function Select Screen"
         component={FunctionSelectScreen}
+      />
+      <Stack.Screen
+        name="NFC Reader"
+        component={AlwaysOnNFC}
       />
 
     </Stack.Navigator>

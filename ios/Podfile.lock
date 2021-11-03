@@ -20,8 +20,6 @@ PODS:
     - UMCore
   - EXKeepAwake (9.2.0):
     - UMCore
-  - EXLinearGradient (9.2.0):
-    - UMCore
   - expo-dev-client (0.5.1):
     - expo-dev-launcher
     - expo-dev-menu
@@ -355,6 +353,8 @@ PODS:
   - RNScreens (3.4.0):
     - React-Core
     - React-RCTImage
+  - RNSVG (12.1.1):
+    - React
   - UMAppLoader (2.2.0)
   - UMCore (7.1.2)
   - UMReactNativeAdapter (6.3.7):
@@ -374,7 +374,6 @@ DEPENDENCIES:
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
-  - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - expo-dev-client (from `../node_modules/expo-dev-client`)
   - expo-dev-launcher (from `../node_modules/expo-dev-launcher`)
   - expo-dev-menu (from `../node_modules/expo-dev-menu`)
@@ -415,6 +414,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
   - "UMCore (from `../node_modules/@unimodules/core/ios`)"
   - "UMReactNativeAdapter (from `../node_modules/@unimodules/react-native-adapter/ios`)"
@@ -442,8 +442,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-image-loader/ios"
   EXKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
-  EXLinearGradient:
-    :path: "../node_modules/expo-linear-gradient/ios"
   expo-dev-client:
     :path: "../node_modules/expo-dev-client"
   expo-dev-launcher:
@@ -520,6 +518,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   UMAppLoader:
     :path: "../node_modules/unimodules-app-loader/ios"
   UMCore:
@@ -541,7 +541,6 @@ SPEC CHECKSUMS:
   EXFont: cb2350960187470ec54ff4668755abb74fde9839
   EXImageLoader: 6494524ac2b99af4edcacada0e19c71600423e59
   EXKeepAwake: db7607300383508b9ccf1da5bed4eab541f53e25
-  EXLinearGradient: 39c0836741b28dc4b7a07065e921de00abae47f3
   expo-dev-client: 2dcd5569fe2f663fe19ddbd3b88b566bc272b7b3
   expo-dev-launcher: b74028cd12d3a1546fc86dbf7470b301b0219502
   expo-dev-menu: c6ec156b6dbc1099389749f2ddf9ed76f9a56063
@@ -580,6 +579,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: 6ec2460b9c6c8f3b1403bd0eaa12d359a98650e3
   RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce
+  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   UMAppLoader: db2dae4bc3085e21f56d6d9cf7783d08c5999af4
   UMCore: ad33bbda30dee343a248e3696f30502092d9842d
   UMReactNativeAdapter: fadad42e25524911487098bf0aaa013b78533b22
