@@ -1,4 +1,10 @@
 import * as React from "react";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import {Ionicons} from '@expo/vector-icons';
 import { NavigationContainer } from "@react-navigation/native";
 
 import { createStackNavigator } from "@react-navigation/stack";
@@ -6,6 +12,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import FunctionSelectScreen from "../Screens/FunctionSelectScreen";
 import OnboardingCTAScreen from "../Screens/OnboardingCTAScreen";
 import AlwaysOnNFC from "../Screens/AlwaysOnNFC";
+import PatientLogin from "../Screens/PatientLogin";
+import PatientHomeScreen from "../Screens/PatientHomeScreen";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +35,22 @@ export default function AppNavigation() {
       <Stack.Screen
         name="Function Select Screen"
         component={FunctionSelectScreen}
+      />
+      <Stack.Screen
+        name="Patient Login"
+        component={PatientLogin}
+      />
+      <Stack.Screen
+        name="Patient Home Screen"
+        component={PatientHomeScreen}
+        options={{
+          headerRight: () => (
+            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
+              <Text>Logout</Text>
+              <Ionicons name="log-out-outline" size={40} color="#090C68" />
+            </TouchableOpacity>
+          )
+        }}
       />
       <Stack.Screen
         name="NFC Reader"
