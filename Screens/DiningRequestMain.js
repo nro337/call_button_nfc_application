@@ -28,21 +28,21 @@ export default function DiningRequestMain({ navigation, route }) {
       id: '0',
       title: 'Pancakes',
       price: 1.50,
-      image: Images.patientHomeImage,
+      image: Images.pancakes,
       quantity: 0,
     },
     {
       id: '1',
       title: 'Waffles',
       price: 1.50,
-      image: Images.patientHomeImage,
+      image: Images.waffles,
       quantity: 0,
     },
     {
       id: '2',
       title: 'Bacon',
       price: 0.50,
-      image: Images.patientHomeImage,
+      image: Images.bacon,
       quantity: 0,
     },
   ];
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: '100%',
-    width: '20%',
+    width: '30%',
     resizeMode: "contain",
     // tintColor: '#090C68'
   },
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 50,
     ...Platform.select({
       ios: {
-        height: Dimensions.get("window").height * 0.3,
+        height: Dimensions.get("window").height * 0.4,
       },
       android: {
         height: Dimensions.get("window").height - 280,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   listItem: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "center",
     borderColor: "black",
     borderWidth: 1,
@@ -220,13 +220,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   listTextHeader: {
-    fontSize: 25,
+    fontSize: 30,
     fontWeight: "700",
     paddingBottom: 5,
     color: "#0A0D64",
   },
   listTextSubheader: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "500",
     color: "#0A0D64",
   },
