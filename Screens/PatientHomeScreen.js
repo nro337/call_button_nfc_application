@@ -12,7 +12,7 @@ import {
 import { Images } from "../App/Themes/";
 import CustButton from "../App/Components/CustButton";
 import CustCard from "../App/Components/CustCard";
-import {Ionicons} from '@expo/vector-icons';
+import {Ionicons, FontAwesome5} from '@expo/vector-icons';
 
 export default function PatientHomeScreen({ navigation, route }) {
 
@@ -32,14 +32,14 @@ export default function PatientHomeScreen({ navigation, route }) {
         <View style={styles.previousRequestsContainer}>
           <View style={styles.previousRequestItem}>
             <View style={styles.iconContainer}>
-              <Ionicons name="chevron-forward-outline" size={40} color="#090C68" />
+              <FontAwesome5 name="prescription-bottle-alt" size={20} color="#7FA8D6" />
             </View>
             <View style={styles.previousRequestsTextContainer}>
               <Text style={{fontSize: 20}}>Nurse Station</Text>
-              <Text>Medication - Advil</Text>
+              <Text style={{fontSize: 12}}>Medication - Advil</Text>
+              <Text style={{paddingTop: 5, color: "#7FA8D6", fontSize: 12}}>Time Made: 10:00am</Text>
             </View>
-            <Text>Hi</Text>
-
+            <Ionicons name="checkmark-circle-outline" size={40} color="green" />
           </View>
         </View>
       </View>
