@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Button, Dimensions, Switch } from "react-native";
 
 import NfcManager, { NfcTech, Ndef, NfcEvents } from "react-native-nfc-manager";
 
@@ -11,6 +11,10 @@ export default function AlwaysOnNFC() {
   });
 
   const [scanMessage, setScanMessage] = useState("");
+  const [isEnabled, setIsEnabled] = useState(false);
+
+  //https://reactnative.dev/docs/switch
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
 
 
@@ -85,10 +89,30 @@ export default function AlwaysOnNFC() {
 
   return (
     <View style={styles.container}>
-      <Text>NFC Read/Write MVP</Text>
       <StatusBar style="auto" />
-      <Button title="Write" onPress={writeNdef}></Button>
-      <Button title="Read" onPress={readNdef}></Button>
+      <View style={styles.headerTextContainer}>
+        <Text style={styles.headerText}>NFC Read/Write MVP</Text>
+      </View>
+
+      <View style={styles.nfcbutton}>
+        <Text style={styles.nfcButtonText}>NFC Reader is OFF</Text>
+      </View>
+      <View>
+        <Button title="Write" onPress={writeNdef}></Button>
+        <Button title="Read" onPress={readNdef}></Button>
+      </View>
+      <View style={styles.switchContainer}>
+        <Text style={{fontSize: 15, fontWeight: "500", paddingRight: 10}}>Off</Text>
+        <Switch
+          trackColor={{ false: "#767577", true: "#0A0D64" }}
+          thumbColor={isEnabled ? "white" : "#0A0D64"}
+          ios_backgroundColor="white"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
+      </View>
+
+
       <Text>{scanMessage}</Text>
     </View>
   );
@@ -103,9 +127,9 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "black",
-    alignItems: "stretch",
-    justifyContent: "center",
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "space-around",
     ...Platform.select({
       ios: {
         height: Dimensions.get('window').height,
@@ -129,4 +153,36 @@ const styles = StyleSheet.create({
       }
     })
   },
+  headerTextContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignSelf: "flex-start",
+    justifyContent: "center",
+    paddingLeft: 40,
+  },
+  headerText: {
+    fontSize: 25,
+    fontWeight: "600",
+  },
+  nfcbutton: {
+    borderRadius: 256,
+    width: 300,
+    height: 300,
+    backgroundColor: "#0A0D64",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  },
+  nfcButtonText: {
+    color: "white",
+    fontSize: 30,
+  },
+  switchContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  }
 });

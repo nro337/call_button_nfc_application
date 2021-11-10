@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { Images } from "../App/Themes/";
 import CustButton from "../App/Components/CustButton";
@@ -20,15 +21,21 @@ export default function PatientHomeScreen({ navigation, route }) {
 
   return (
     <View>
+      <ScrollView>
       <View style={styles.container}>
         <Text style={styles.headerText}>Welcome, Sophia</Text>
-        <View style={styles.requestCard}>
+        <View style={styles.subheaderContainer}>
+          <Ionicons name="location-outline" size={40} color="#090C68" />
+          <Text style={styles.subheaderText}>Penn State Hershey Medical Center</Text>
+        </View>
+        <TouchableOpacity style={styles.requestCard} onPress={() => navigation.navigate('Make A Request')}>
           <Image style={styles.logo} source={Images.patientHomeScreenImage} />
           <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: Dimensions.get('screen').width * 0.4}}>
             <Text style={styles.requestCardText}>Make a Request</Text>
             <Ionicons name="chevron-forward-outline" size={40} color="#090C68" />
           </View>
-        </View>
+        </TouchableOpacity>
+        <Text style={styles.prevReqSubheading}>View Previous Requests</Text>
         <View style={styles.previousRequestsContainer}>
           <View style={styles.previousRequestItem}>
             <View style={styles.iconContainer}>
@@ -41,8 +48,45 @@ export default function PatientHomeScreen({ navigation, route }) {
             </View>
             <Ionicons name="checkmark-circle-outline" size={40} color="green" />
           </View>
+          <View style={styles.previousRequestItem}>
+            <View style={styles.iconContainer}>
+              <FontAwesome5 name="coffee" size={20} color="#7FA8D6" />
+            </View>
+            <View style={styles.previousRequestsTextContainer}>
+              <Text style={{fontSize: 20}}>Nurse Station</Text>
+              <Text style={{fontSize: 12}}>Medication - Advil</Text>
+              <Text style={{paddingTop: 5, color: "#7FA8D6", fontSize: 12}}>Time Made: 10:00am</Text>
+            </View>
+            <Ionicons name="close-circle-outline" size={40} color="red" />
+          </View>
+          <View style={styles.previousRequestItem}>
+            <View style={styles.iconContainer}>
+              <FontAwesome5 name="coffee" size={20} color="#7FA8D6" />
+            </View>
+            <View style={styles.previousRequestsTextContainer}>
+              <Text style={{fontSize: 20}}>Nurse Station</Text>
+              <Text style={{fontSize: 12}}>Medication - Advil</Text>
+              <Text style={{paddingTop: 5, color: "#7FA8D6", fontSize: 12}}>Time Made: 10:00am</Text>
+            </View>
+            <Ionicons name="close-circle-outline" size={40} color="red" />
+          </View>
         </View>
+        <Text style={styles.prevReqSubheading}>Usage Tutorial</Text>
+        <ScrollView horizontal={true}>
+          <View style={styles.usageContainer}>
+            <TouchableOpacity style={styles.usageTutorialItem}>
+              <Text>Step 1</Text>
+            </TouchableOpacity>
+            <View style={styles.usageTutorialItem}>
+              <Text>Step 2</Text>
+            </View>
+            <View style={styles.usageTutorialItem}>
+              <Text>Step 3</Text>
+            </View>
+          </View>
+        </ScrollView>
       </View>
+      </ScrollView>
     </View>
   );
 }
@@ -56,10 +100,25 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     ...Platform.select({
       ios: {
-        height: Dimensions.get('window').height - 90,
+        //height: Dimensions.get('window').height,
+        paddingTop: 20,
+        paddingBottom: 20,
+        marginBottom: 50,
       }
     })
   },
+  subheaderContainer: {
+    display:"flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  subheaderText: {
+    color: "#090C68",
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "600",
+  },  
   logo: {
     // height: '50%',
     // width: '50%',
@@ -90,12 +149,20 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#090C68",
   },
+  prevReqSubheading: {
+    color: "#090C68",
+    alignSelf: "flex-start",
+    paddingLeft: 60,
+    marginTop: 20,
+    fontSize: 15,
+    fontWeight: "600",
+  },
   previousRequestsContainer: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical: 10,
     marginHorizontal: 10,
   },
   previousRequestItem: {
@@ -110,6 +177,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOpacity: 0.25,
     padding: 10,
+    marginVertical: 10,
   },
   previousRequestsTextContainer: {
     display: "flex",
@@ -128,5 +196,26 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
+  },
+  usageContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  usageTutorialItem: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#D4E2F1",
+    borderRadius: 16,
+    shadowOffset: {width: 0, height: 4},
+    shadowColor: "black",
+    shadowRadius: 4,
+    shadowOpacity: 0.25,
+    padding: 30,
+    marginHorizontal: 10,
   }
 });

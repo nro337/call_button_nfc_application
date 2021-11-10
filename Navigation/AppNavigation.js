@@ -14,6 +14,7 @@ import OnboardingCTAScreen from "../Screens/OnboardingCTAScreen";
 import AlwaysOnNFC from "../Screens/AlwaysOnNFC";
 import PatientLogin from "../Screens/PatientLogin";
 import PatientHomeScreen from "../Screens/PatientHomeScreen";
+import MakeARequestScreen from "../Screens/MakeARequestScreen";
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,10 @@ export default function AppNavigation() {
             </TouchableOpacity>
           )
         }}
+      />
+      <Stack.Screen
+        name="Make A Request"
+        component={MakeARequestScreen}
       />
       <Stack.Screen
         name="NFC Reader"
