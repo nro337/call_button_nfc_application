@@ -15,6 +15,7 @@ import AlwaysOnNFC from "../Screens/AlwaysOnNFC";
 import PatientLogin from "../Screens/PatientLogin";
 import PatientHomeScreen from "../Screens/PatientHomeScreen";
 import MakeARequestScreen from "../Screens/MakeARequestScreen";
+import DiningRequestMain from "../Screens/DiningRequestMain";
 
 const Stack = createStackNavigator();
 
@@ -24,7 +25,7 @@ const Stack = createStackNavigator();
 //   );
 // };
 
-export default function AppNavigation() {
+export default function AppNavigation({navigation}) {
   return (
     <NavigationContainer>
       {/* <MyStack /> */}
@@ -44,18 +45,38 @@ export default function AppNavigation() {
       <Stack.Screen
         name="Patient Home Screen"
         component={PatientHomeScreen}
-        options={{
+        options={ ({ navigation }) => ({
           headerRight: () => (
-            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
+            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>
               <Text>Logout</Text>
               <Ionicons name="log-out-outline" size={40} color="#090C68" />
             </TouchableOpacity>
           )
-        }}
+        })}
       />
       <Stack.Screen
         name="Make A Request"
         component={MakeARequestScreen}
+        options={ ({ navigation }) => ({
+          headerRight: () => (
+            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>
+              <Text>Logout</Text>
+              <Ionicons name="log-out-outline" size={40} color="#090C68" />
+            </TouchableOpacity>
+          )
+        })}
+      />
+      <Stack.Screen
+        name="Dining Request"
+        component={DiningRequestMain}
+        options={ ({ navigation }) => ({
+          headerRight: () => (
+            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>
+              <Text>Logout</Text>
+              <Ionicons name="log-out-outline" size={40} color="#090C68" />
+            </TouchableOpacity>
+          )
+        })}
       />
       <Stack.Screen
         name="NFC Reader"

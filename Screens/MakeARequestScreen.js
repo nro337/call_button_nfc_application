@@ -29,7 +29,7 @@ export default function MakeARequestScreen({ navigation, route }) {
         </View>
         <CustButton title="Nurse Station" icon="medkit-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Patient Home Screen')}></CustButton>
         <CustButton title="Housekeeping" icon="bed-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Patient Home Screen')}></CustButton>
-        <CustButton title="Dining Request" icon="cafe-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Patient Home Screen')}></CustButton>
+        <CustButton title="Dining Request" icon="cafe-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Dining Request')}></CustButton>
       </View>
     </View>
   );
