@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import FunctionSelectScreen from "../Screens/FunctionSelectScreen";
 import TemplateScreen from "../Screens/TemplateScreen";
+import Housekeeping from "../Screens/Housekeeping";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,10 @@ export default function AppNavigation() {
       <Stack.Screen
         name="FunctionSelectScreen"
         component={FunctionSelectScreen}
+      />
+       <Stack.Screen
+        name="Housekeeping"
+        component={Housekeeping}
       />
     </Stack.Navigator>
       {/* <Stack.Screen name="Home" component={MyStack}/> */}

@@ -22,6 +22,7 @@ export default function TemplateScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.headerText}>Text goes here!</Text>
         <CustButton title="Custom Button" icon="chevron-forward-outline" size={20} fontSize={30} color="white" backgroundColor="#090C68" onPress={() => navigation.navigate('FunctionSelectScreen')}></CustButton>
+        <CustButton title="Taryn" icon="chevron-forward-outline" size={20} fontSize={30} color="white" backgroundColor="#090C68" onPress={() => navigation.navigate('Housekeeping')}></CustButton>
       </View>
     </View>
   );
