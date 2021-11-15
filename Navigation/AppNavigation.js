@@ -16,6 +16,11 @@ import PatientLogin from "../Screens/PatientLogin";
 import PatientHomeScreen from "../Screens/PatientHomeScreen";
 import MakeARequestScreen from "../Screens/MakeARequestScreen";
 import DiningRequestMain from "../Screens/DiningRequestMain";
+import OrderSummary from "../Screens/OrderSummary";
+import Housekeeping from "../Screens/Housekeeping";
+import StaffLogin from "../Screens/StaffLogin";
+import StaffHomeScreen from "../Screens/StaffHomeScreen";
+import NurseStation from "../Screens/NurseStation";
 
 const Stack = createStackNavigator();
 
@@ -69,6 +74,58 @@ export default function AppNavigation({navigation}) {
       <Stack.Screen
         name="Dining Request"
         component={DiningRequestMain}
+        options={ ({ navigation }) => ({
+          headerRight: () => (
+            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>
+              <Text>Logout</Text>
+              <Ionicons name="log-out-outline" size={40} color="#090C68" />
+            </TouchableOpacity>
+          )
+        })}
+      />
+      <Stack.Screen
+        name="Order Summary"
+        component={OrderSummary}
+        options={ ({ navigation }) => ({
+          headerRight: () => (
+            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>
+              <Text>Logout</Text>
+              <Ionicons name="log-out-outline" size={40} color="#090C68" />
+            </TouchableOpacity>
+          )
+        })}
+      />
+      <Stack.Screen
+        name="Housekeeping"
+        component={Housekeeping}
+        options={ ({ navigation }) => ({
+          headerRight: () => (
+            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>
+              <Text>Logout</Text>
+              <Ionicons name="log-out-outline" size={40} color="#090C68" />
+            </TouchableOpacity>
+          )
+        })}
+      />
+      <Stack.Screen
+        name="Staff Login"
+        component={StaffLogin}
+      />
+      <Stack.Screen
+        name="Staff Home Screen"
+        component={StaffHomeScreen}
+        options={ ({ navigation }) => ({
+          headerRight: () => (
+            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>
+              <Text>Logout</Text>
+              <Ionicons name="log-out-outline" size={40} color="#090C68" />
+            </TouchableOpacity>
+          )
+        })}
+      />
+      <Stack.Screen
+        name="Nurse Station"
+        component={NurseStation}
         options={ ({ navigation }) => ({
           headerRight: () => (
             <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>

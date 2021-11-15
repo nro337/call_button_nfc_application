@@ -15,21 +15,23 @@ import {
 import { Images } from "../App/Themes";
 import CustButton from "../App/Components/CustButton";
 
-export default function MakeARequestScreen({ navigation, route }) {
+export default function StaffLogin({ navigation, route }) {
 
 
   return (
     <View>
       <View style={styles.container}>
         <View style={styles.headerTextContainer}>
-          <Text style={styles.headerText}>Make a Request</Text>
+          <Text style={styles.headerText}>Staff</Text>
         </View>
         <View style={styles.subheadingContainer}>
-          <Text style={styles.subheaderText}>Which category would you like to make your request in?</Text>
+          <Text style={styles.subheaderText}>Please enter Staff ID Number & Password</Text>
         </View>
-        <CustButton title="Nurse Station" icon="medkit-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Nurse Station')}></CustButton>
-        <CustButton title="Housekeeping" icon="bed-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Housekeeping')}></CustButton>
-        <CustButton title="Dining Request" icon="cafe-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Dining Request')}></CustButton>
+          <View style={styles.bodyContainer}>
+            <TextInput style={styles.textInputStyle} placeholderTextColor="#C4C4C4" placeholder="Staff ID Number"></TextInput>
+            <TextInput style={styles.textInputStyle} placeholderTextColor="#C4C4C4" placeholder="Password"></TextInput>
+          </View>
+        <CustButton title="View Staff Profile" icon="chevron-forward-outline" size={20} fontSize={25} color="white" backgroundColor="#090C68" onPress={() => navigation.navigate('Staff Home Screen')}></CustButton>
       </View>
     </View>
   );
@@ -87,8 +89,8 @@ const styles = StyleSheet.create({
     })
   },
   subheaderText: {
-    fontSize: 20,
-    fontWeight: "600",
+    fontSize: 15,
+    fontWeight: "500",
   },
   subheadingContainer: {
     display: "flex",
@@ -96,8 +98,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     paddingLeft: 40,
-    paddingRight: 40,
-    marginBottom: 40,
     ...Platform.select({
       ios: {
         width: Dimensions.get('window').width,

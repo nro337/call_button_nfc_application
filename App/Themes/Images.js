@@ -6,6 +6,8 @@ const images = {
   pancakes: require('../Images/Pancakes.jpg'),
   waffles: require('../Images/Waffles.jpg'),
   bacon: require('../Images/Bacon.jpg'),
+  sausage: require('../Images/Sausage.jpg'),
+  toast: require('../Images/Toast.jpg'),
 }
 
 export default images

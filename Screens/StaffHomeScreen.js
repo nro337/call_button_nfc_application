@@ -18,70 +18,101 @@ import { Images } from "../App/Themes";
 import CustButton from "../App/Components/CustButton";
 
 import {Ionicons} from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
-export default function DiningRequestMain({ navigation, route }) {
-
-  const [search, setSearch] = useState("");
+export default function StaffHomeScreen({ navigation, route }) {
 
   const DATA = [
     {
       id: '0',
-      title: 'Pancakes',
-      price: 1.50,
-      image: Images.pancakes,
-      quantity: 0,
+      name: 'Sophia Novak',
+      roomNumber: 123,
+      requestType: 'Dining Request',
+      icon: 'coffee',
+      order: [
+        {
+            id: '0',
+            title: 'Pancakes',
+            price: 1.50,
+            image: Images.pancakes,
+            quantity: 0,
+          },
+          {
+            id: '1',
+            title: 'Bacon',
+            price: 0.50,
+            image: Images.bacon,
+            quantity: 0,
+          },
+      ]
     },
     {
-      id: '1',
-      title: 'Waffles',
-      price: 1.50,
-      image: Images.waffles,
-      quantity: 0,
-    },
-    {
-      id: '2',
-      title: 'Bacon',
-      price: 0.50,
-      image: Images.bacon,
-      quantity: 0,
-    },
-    {
-      id: '3',
-      title: 'Sausage',
-      price: 0.50,
-      image: Images.sausage,
-      quantity: 0,
-  },
-  {
-      id: '4',
-      title: 'Toast',
-      price: 0.50,
-      image: Images.toast,
-      quantity: 0,
-  },
+        id: '1',
+        name: 'Nick Alico',
+        roomNumber: 234,
+        requestType: 'Extra Bedding',
+        icon: 'bed',
+        order: [
+          {
+              id: '0',
+              title: 'Pancakes',
+              price: 1.50,
+              image: Images.pancakes,
+              quantity: 0,
+            },
+            {
+              id: '1',
+              title: 'Bacon',
+              price: 0.50,
+              image: Images.bacon,
+              quantity: 0,
+            },
+        ]
+      },
+      {
+        id: '2',
+        name: 'Taryn Campion',
+        roomNumber: 345,
+        requestType: 'Pain Indication',
+        icon: 'pills',
+        order: [
+          {
+              id: '0',
+              title: 'Pancakes',
+              price: 1.50,
+              image: Images.pancakes,
+              quantity: 0,
+            },
+            {
+              id: '1',
+              title: 'Bacon',
+              price: 0.50,
+              image: Images.bacon,
+              quantity: 0,
+            },
+        ]
+      },
   ];
 
-  const Item = ({ title, price, image, quantity }) => (
-    <View style={styles.listItem}>
-      <Image style={styles.logo} source={image} />
+  const Item = ({ name, roomNumber, icon, requestType, order }) => (
+    <TouchableOpacity style={styles.listItem}>
+      <FontAwesome5 name={icon} size={40} color="#090C68" />
       <View style={styles.listTextContainer}>
-        <Text style={styles.listTextHeader}>{title}</Text>
-        <Text style={styles.listTextSubheader}>$ {price}/unit</Text>
+        <Text style={styles.listTextHeader}>{name}</Text>
+        <Text style={styles.listTextSubheader}>Room {roomNumber}</Text>
+        <Text style={styles.listTextTertiary}>10 min ago</Text>
       </View>
-      <View style={styles.incrementContainer}>
-        <TouchableOpacity>
-          <Ionicons name="add-circle-outline" size={25} color="gray" />
-        </TouchableOpacity>
-        <Text style={styles.incrementText}>{quantity}</Text>
-        <TouchableOpacity>
-          <Ionicons name="remove-circle-outline" size={25} color="gray" />
-        </TouchableOpacity>
+      <View style={styles.badgeAndCaretContainer}>
+        <View style={styles.badge}>
+            <Text style={{padding: 5, color: "white", fontSize: 10}}>{requestType}</Text>
+        </View>
+        <Ionicons name="chevron-forward-outline" size={40} color="#090C68" />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderItem = ({ item }) => (
-    <Item title={item.title} price={item.price} image={item.image} quantity={item.quantity} />
+    <Item name={item.name} roomNumber={item.roomNumber} icon={item.icon} requestType={item.requestType} order={item.order} />
   );
 
 
@@ -89,19 +120,10 @@ export default function DiningRequestMain({ navigation, route }) {
     <View>
       <View style={styles.container}>
         <View style={styles.headerTextContainer}>
-          <Text style={styles.headerText}>Dining Request</Text>
+          <Text style={styles.headerText}>Patient Requests</Text>
         </View>
         <View style={styles.subheadingContainer}>
-          <Text style={styles.subheaderText}>Please select which food item you would like.</Text>
-        </View>
-        <View style={styles.searchBarContainer}>
-          <SearchBar
-            placeholder="Type Here..."
-            onChangeText={(search) => setSearch(search)}
-            value={search}
-            style={styles.searchBar}
-            platform={Platform.OS}
-          />
+          <Text style={styles.subheaderText}>View all patient requests below.</Text>
         </View>
         <View style={styles.flatListContainer}>
           <FlatList
@@ -110,7 +132,6 @@ export default function DiningRequestMain({ navigation, route }) {
             keyExtractor={item => item.id}
           />
         </View>
-        <CustButton title="Review Order" icon="chevron-forward-outline" size={20} fontSize={25} color="white" backgroundColor="#090C68" onPress={() => navigation.navigate('Order Summary')}></CustButton>
       </View>
     </View>
   );
@@ -197,12 +218,6 @@ const styles = StyleSheet.create({
       }
     })
   },
-  searchBarContainer: {
-    width: Dimensions.get("screen").width * 0.8
-  },  
-  searchBar: {
-    
-  },
   flatListContainer: {
     width: Dimensions.get("screen").width,
     // paddingHorizontal: 50,
@@ -226,6 +241,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 1,
     paddingVertical: 10,
+    paddingHorizontal: 10,
   },
   listTextContainer: {
     display: "flex",
@@ -234,15 +250,21 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   listTextHeader: {
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: "700",
     paddingBottom: 5,
     color: "#0A0D64",
   },
   listTextSubheader: {
-    fontSize: 25,
+    fontSize: 15,
     fontWeight: "500",
+    paddingBottom: 5,
     color: "#0A0D64",
+  },
+  listTextTertiary: {
+    fontSize: 10,
+    fontWeight: "400",
+    color: "gray",
   },
   incrementContainer: {
     display: "flex",
@@ -255,5 +277,15 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#0A0D64",
     paddingHorizontal: 5,
+  },
+  badgeAndCaretContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  badge: {
+      borderRadius: 16,
+      backgroundColor: "#090C68",
   }
 });

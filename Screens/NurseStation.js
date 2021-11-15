@@ -15,21 +15,65 @@ import {
 import { Images } from "../App/Themes";
 import CustButton from "../App/Components/CustButton";
 
-export default function MakeARequestScreen({ navigation, route }) {
+import NfcManager, { NfcTech, Ndef, NfcEvents } from "react-native-nfc-manager";
+
+export default function NurseStation({ navigation, route }) {
+    useEffect(() => {
+        initNfc();
+      });
+    
+    const [scanMessage, setScanMessage] = useState("");
+
+  // Pre-step, call this before any NFC operations
+  async function initNfc() {
+    await NfcManager.start();
+  }
+
+  function readNdef() {
+    const cleanUp = () => {
+      NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
+      NfcManager.setEventListener(NfcEvents.SessionClosed, null);
+    };
+
+    return new Promise((resolve) => {
+      let tagFound = null;
+
+      NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
+        tagFound = tag;
+        //https://stackoverflow.com/questions/3195865/converting-byte-array-to-string-in-javascript
+        setScanMessage(
+          String.fromCharCode.apply(null, tagFound.ndefMessage[0].payload).substring(3)
+        );
+        //NfcManager.setAlertMessageIOS(NfcManager.ndefHandler.getNdefMessage(Ndef.text.decodePayload([tagFound])));
+        resolve(tagFound);
+        NfcManager.setAlertMessageIOS("NDEF tag found");
+        NfcManager.unregisterTagEvent().catch(() => 0);
+      });
+
+      NfcManager.setEventListener(NfcEvents.SessionClosed, () => {
+        cleanUp();
+        if (!tagFound) {
+          resolve();
+        }
+      });
+
+      NfcManager.registerTagEvent();
+    });
+  }
 
 
   return (
     <View>
       <View style={styles.container}>
         <View style={styles.headerTextContainer}>
-          <Text style={styles.headerText}>Make a Request</Text>
+          <Text style={styles.headerText}>Nurse Station</Text>
         </View>
         <View style={styles.subheadingContainer}>
-          <Text style={styles.subheaderText}>Which category would you like to make your request in?</Text>
+          <Text style={styles.subheaderText}>How would you like "a nurse" to assist you?</Text>
         </View>
-        <CustButton title="Nurse Station" icon="medkit-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Nurse Station')}></CustButton>
-        <CustButton title="Housekeeping" icon="bed-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Housekeeping')}></CustButton>
-        <CustButton title="Dining Request" icon="cafe-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Dining Request')}></CustButton>
+        <CustButton title="General Request" icon="pint-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={readNdef}></CustButton>
+        <CustButton title="Pain Indication" icon="medkit-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={readNdef}></CustButton>
+        <CustButton title="Bathroom" icon="water-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={readNdef}></CustButton>
       </View>
     </View>
   );
