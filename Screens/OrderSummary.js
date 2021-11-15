@@ -16,6 +16,7 @@ import {
 import { Images } from "../App/Themes";
 import CustButton from "../App/Components/CustButton";
 import NfcManager, { NfcTech, Ndef, NfcEvents } from "react-native-nfc-manager";
+import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 
 import {Ionicons} from '@expo/vector-icons';
 
