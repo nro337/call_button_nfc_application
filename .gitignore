@@ -72,4 +72,4 @@ web-build/
 
 # @end expo-cli
 
-*.env
+/App/Config/database.config.js

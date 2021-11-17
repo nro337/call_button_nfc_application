@@ -16,8 +16,55 @@ import CustCard from "../App/Components/CustCard";
 import {Ionicons, FontAwesome5} from '@expo/vector-icons';
 
 export default function PatientHomeScreen({ navigation, route }) {
+  const [reqHeader, setReqHeader] = useState('')
+  const [allReq, setAllReq] = useState([]);
+
+  useEffect(() => {
+    fetch('http://10.0.0.55:5000/patient-requests')
+      .then((resp) => resp.json())
+      .then((data) => {
+        data.forEach(request => {
+          setAllReq(allReq => [...allReq, request])
+          //allReq.push(request)
+        })
+        //console.log(data);
+        setReqHeader(data[0].patient_id)
+      })
+  }, [])
+
+  useEffect(() => {
+    fetch('http://10.0.0.55:5000/providers')
+      .then((resp2) => resp2.json())
+      .then((data2) => {
+        console.log(data2);
+        //setReqHeader(data[0].patient_id)
+      })
+  }, [])
+
+
+  const renderPrevRequest = ({item}) => {
+    allReq.forEach(req => {
+      return <PrevRequest />
+    })
+  }
 
   // const { myParam } = route.params;
+
+  const PrevRequest = ({ item }) => (
+    <View style={styles.previousRequestItem}>
+      <View style={styles.iconContainer}>
+        <FontAwesome5 name="coffee" size={20} color="#7FA8D6" />
+      </View>
+      <View style={styles.previousRequestsTextContainer}>
+        <Text style={{ fontSize: 20 }}>{item}</Text>
+        <Text style={{ fontSize: 12 }}>Medication - Advil</Text>
+        <Text style={{ paddingTop: 5, color: "#7FA8D6", fontSize: 12 }}>
+          Time Made: 10:00am
+        </Text>
+      </View>
+      <Ionicons name="close-circle-outline" size={40} color="red" />
+    </View>
+  );
 
   return (
     <View>
@@ -64,12 +111,13 @@ export default function PatientHomeScreen({ navigation, route }) {
               <FontAwesome5 name="coffee" size={20} color="#7FA8D6" />
             </View>
             <View style={styles.previousRequestsTextContainer}>
-              <Text style={{fontSize: 20}}>Nurse Station</Text>
+              <Text style={{fontSize: 20}}>{reqHeader}</Text>
               <Text style={{fontSize: 12}}>Medication - Advil</Text>
               <Text style={{paddingTop: 5, color: "#7FA8D6", fontSize: 12}}>Time Made: 10:00am</Text>
             </View>
             <Ionicons name="close-circle-outline" size={40} color="red" />
           </View>
+          <PrevRequest item={"Hello"}/>
         </View>
         <Text style={styles.prevReqSubheading}>Usage Tutorial</Text>
         <ScrollView horizontal={true}>
