@@ -21,6 +21,7 @@ import Housekeeping from "../Screens/Housekeeping";
 import StaffLogin from "../Screens/StaffLogin";
 import StaffHomeScreen from "../Screens/StaffHomeScreen";
 import NurseStation from "../Screens/NurseStation";
+import PreviousPatientRequestDetailsScreen from "../Screens/PreviousPatientRequestDetailsScreen"
 
 const Stack = createStackNavigator();
 
@@ -62,6 +63,18 @@ export default function AppNavigation({navigation}) {
       <Stack.Screen
         name="Make A Request"
         component={MakeARequestScreen}
+        options={ ({ navigation }) => ({
+          headerRight: () => (
+            <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>
+              <Text>Logout</Text>
+              <Ionicons name="log-out-outline" size={40} color="#090C68" />
+            </TouchableOpacity>
+          )
+        })}
+      />
+      <Stack.Screen
+        name="Previous Request Details"
+        component={PreviousPatientRequestDetailsScreen}
         options={ ({ navigation }) => ({
           headerRight: () => (
             <TouchableOpacity style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} onPress={() => navigation.navigate('Function Select Screen')}>

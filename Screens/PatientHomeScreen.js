@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy } from "react";
 import {
   Button,
   StyleSheet,
@@ -14,26 +14,26 @@ import { Images } from "../App/Themes/";
 import CustButton from "../App/Components/CustButton";
 import CustCard from "../App/Components/CustCard";
 import {Ionicons, FontAwesome5} from '@expo/vector-icons';
+const dbConfig = require('../App/Config/database.config');
 
 export default function PatientHomeScreen({ navigation, route }) {
   const [reqHeader, setReqHeader] = useState('')
   const [allReq, setAllReq] = useState([]);
 
   useEffect(() => {
-    fetch('http://104.39.183.163:5000/patient-requests')
+    fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
       .then((resp) => resp.json())
       .then((data) => {
         data.forEach(request => {
           setAllReq(allReq => [...allReq, request])
           //allReq.push(request)
         })
-        //console.log(data);
         setReqHeader(data[0].patient_id)
       })
   }, [])
 
   useEffect(() => {
-    fetch('http://104.39.183.163:5000/providers')
+    fetch(`http://${dbConfig.mobileURL}:5000/providers`)
       .then((resp2) => resp2.json())
       .then((data2) => {
         console.log(data2);
@@ -45,25 +45,61 @@ export default function PatientHomeScreen({ navigation, route }) {
   const renderPrevRequest = ({item}) => {
     allReq.forEach(req => {
       return <PrevRequest item={req} />
+
     })
   }
 
   // const { myParam } = route.params;
 
   const PrevRequest = ({ item }) => (
-    <View style={styles.previousRequestItem}>
+    <TouchableOpacity style={styles.previousRequestItem} onPress={() => navigation.navigate('Previous Request Details', {item})}>
       <View style={styles.iconContainer}>
-        <FontAwesome5 name="coffee" size={20} color="#7FA8D6" />
+        {Object.keys(item.msg_payload[0])[0] === "1" ? <FontAwesome5 name="prescription-bottle-alt" size={20} color="#7FA8D6" /> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(item.msg_payload[0])[0] === "2" ? <FontAwesome5 name="toilet" size={20} color="#7FA8D6" /> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(item.msg_payload[0])[0] === "3" ? <FontAwesome5 name="hand-holding-medical" size={20} color="#7FA8D6" /> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(item.msg_payload[0])[0] === "4" ? <FontAwesome5 name="coffee" size={20} color="#7FA8D6" /> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(item.msg_payload[0])[0] === "5" ? <FontAwesome5 name="bed" size={20} color="#7FA8D6" /> : <Text style={{display: "none"}}></Text>}
+
       </View>
       <View style={styles.previousRequestsTextContainer}>
-        <Text style={{ fontSize: 20 }}>{item}</Text>
-        <Text style={{ fontSize: 12 }}>Medication - Advil</Text>
+        {Object.keys(item.msg_payload[0])[0] === "1" ? <Text style={{ fontSize: 20 }}>Pain/Medical Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(item.msg_payload[0])[0] === "2" ? <Text style={{ fontSize: 20 }}>Restroom Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(item.msg_payload[0])[0] === "3" ? <Text style={{ fontSize: 20 }}>General Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(item.msg_payload[0])[0] === "4" ? <Text style={{ fontSize: 20 }}>Dining Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(item.msg_payload[0])[0] === "5" ? <Text style={{ fontSize: 20 }}>Housekeeping Request</Text> : <Text style={{display: "none"}}></Text>}
+
+        {(Object.keys(item.msg_payload[0])[0] === "1" && Object.values(item.msg_payload[0])[0] === "1") ? <Text style={{ fontSize: 12 }}>HELP</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "1" && Object.values(item.msg_payload[0])[0] === "2") ? <Text style={{ fontSize: 12 }}>Medication - Tylenol</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "1" && Object.values(item.msg_payload[0])[0] === "3") ? <Text style={{ fontSize: 12 }}>Medication - Aleve</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "1" && Object.values(item.msg_payload[0])[0] === "4") ? <Text style={{ fontSize: 12 }}>Medication - Advil</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "1" && Object.values(item.msg_payload[0])[0] === "5") ? <Text style={{ fontSize: 12 }}>Medication - Motrin</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "1" && Object.values(item.msg_payload[0])[0] === "6") ? <Text style={{ fontSize: 12 }}>Medication - Celebrex</Text> : <Text style={{display: "none"}}></Text>}
+
+        {(Object.keys(item.msg_payload[0])[0] === "2" && Object.values(item.msg_payload[0])[0] === "1") ? <Text style={{ fontSize: 12 }}>Help to/from Restroom</Text> : <Text style={{display: "none"}}></Text>}
+
+        {(Object.keys(item.msg_payload[0])[0] === "3" && Object.values(item.msg_payload[0])[0] === "1") ? <Text style={{ fontSize: 12 }}>Help Getting Out of Bed</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "3" && Object.values(item.msg_payload[0])[0] === "2") ? <Text style={{ fontSize: 12 }}>Change gauze/bandages</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "3" && Object.values(item.msg_payload[0])[0] === "3") ? <Text style={{ fontSize: 12 }}>Counseling patient/family</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "3" && Object.values(item.msg_payload[0])[0] === "4") ? <Text style={{ fontSize: 12 }}>Control Lighting</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "3" && Object.values(item.msg_payload[0])[0] === "5") ? <Text style={{ fontSize: 12 }}>Change Thermostat</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "3" && Object.values(item.msg_payload[0])[0] === "6") ? <Text style={{ fontSize: 12 }}>Request shower/wash assistance</Text> : <Text style={{display: "none"}}></Text>}
+
+        {(Object.keys(item.msg_payload[0])[0] === "4" && Object.values(item.msg_payload[0])[0] === "1") ? <Text style={{ fontSize: 12 }}>Request shower/wash assistance</Text> : <Text style={{display: "none"}}></Text>}
+
+        {(Object.keys(item.msg_payload[0])[0] === "5" && Object.values(item.msg_payload[0])[0] === "1") ? <Text style={{ fontSize: 12 }}>Request Blankets</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "5" && Object.values(item.msg_payload[0])[0] === "2") ? <Text style={{ fontSize: 12 }}>Request Pillow</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "5" && Object.values(item.msg_payload[0])[0] === "3") ? <Text style={{ fontSize: 12 }}>Request Room Cleaning</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "5" && Object.values(item.msg_payload[0])[0] === "4") ? <Text style={{ fontSize: 12 }}>Out of Toilet Paper</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "5" && Object.values(item.msg_payload[0])[0] === "5") ? <Text style={{ fontSize: 12 }}>Out of Tissues</Text> : <Text style={{display: "none"}}></Text>}
+        {(Object.keys(item.msg_payload[0])[0] === "5" && Object.values(item.msg_payload[0])[0] === "6") ? <Text style={{ fontSize: 12 }}>Out of Soap</Text> : <Text style={{display: "none"}}></Text>}
         <Text style={{ paddingTop: 5, color: "#7FA8D6", fontSize: 12 }}>
-          Time Made: 10:00am
+          Time Made: {new Date(item.req_timestamp).toLocaleString('en-US')}
         </Text>
       </View>
-      <Ionicons name="close-circle-outline" size={40} color="red" />
-    </View>
+      {item.status === "complete" ? <Ionicons name="checkmark-circle-outline" size={40} color="green" /> : <Text style={{display: "none"}}></Text>}
+      {item.status === "fail" ? <Ionicons name="close-circle-outline" size={40} color="red" /> : <Text style={{display: "none"}}></Text>}
+      {item.status === "error" ? <Ionicons name="help-circle-outline" size={40} color="#dfe309" /> : <Text style={{display: "none"}}></Text>}
+    </TouchableOpacity>
   );
 
   return (
@@ -84,7 +120,11 @@ export default function PatientHomeScreen({ navigation, route }) {
         </TouchableOpacity>
         <Text style={styles.prevReqSubheading}>View Previous Requests</Text>
         <View style={styles.previousRequestsContainer}>
-          <View renderPrevRequest={renderPrevRequest}></View>
+          {/* https://www.codecheef.org/article/use-array-map-to-dynamically-render-data-in-react-js */}
+          {allReq.map((value, index) => {
+            return <PrevRequest key={value._id.toString()} item={value} />
+          })}
+          {/* <View renderPrevRequest={renderPrevRequest}></View>
           <View style={styles.previousRequestItem}>
             <View style={styles.iconContainer}>
               <FontAwesome5 name="prescription-bottle-alt" size={20} color="#7FA8D6" />
@@ -117,8 +157,8 @@ export default function PatientHomeScreen({ navigation, route }) {
               <Text style={{paddingTop: 5, color: "#7FA8D6", fontSize: 12}}>Time Made: 10:00am</Text>
             </View>
             <Ionicons name="close-circle-outline" size={40} color="red" />
-          </View>
-          <PrevRequest item={"Hello"}/>
+          </View> */}
+          {/* <PrevRequest item={"Hello"}/> */}
         </View>
         <Text style={styles.prevReqSubheading}>Usage Tutorial</Text>
         <ScrollView horizontal={true}>
@@ -217,7 +257,7 @@ const styles = StyleSheet.create({
   previousRequestItem: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
     borderRadius: 50,
@@ -227,6 +267,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     padding: 10,
     marginVertical: 10,
+    width: Dimensions.get("screen").width * 0.8
   },
   previousRequestsTextContainer: {
     display: "flex",
