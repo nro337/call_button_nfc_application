@@ -20,7 +20,7 @@ export default function PatientHomeScreen({ navigation, route }) {
   const [allReq, setAllReq] = useState([]);
 
   useEffect(() => {
-    fetch('http://10.0.0.55:5000/patient-requests')
+    fetch('http://104.39.183.163:5000/patient-requests')
       .then((resp) => resp.json())
       .then((data) => {
         data.forEach(request => {
@@ -33,7 +33,7 @@ export default function PatientHomeScreen({ navigation, route }) {
   }, [])
 
   useEffect(() => {
-    fetch('http://10.0.0.55:5000/providers')
+    fetch('http://104.39.183.163:5000/providers')
       .then((resp2) => resp2.json())
       .then((data2) => {
         console.log(data2);
@@ -44,7 +44,7 @@ export default function PatientHomeScreen({ navigation, route }) {
 
   const renderPrevRequest = ({item}) => {
     allReq.forEach(req => {
-      return <PrevRequest />
+      return <PrevRequest item={req} />
     })
   }
 
@@ -84,6 +84,7 @@ export default function PatientHomeScreen({ navigation, route }) {
         </TouchableOpacity>
         <Text style={styles.prevReqSubheading}>View Previous Requests</Text>
         <View style={styles.previousRequestsContainer}>
+          <View renderPrevRequest={renderPrevRequest}></View>
           <View style={styles.previousRequestItem}>
             <View style={styles.iconContainer}>
               <FontAwesome5 name="prescription-bottle-alt" size={20} color="#7FA8D6" />

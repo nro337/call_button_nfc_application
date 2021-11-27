@@ -8,6 +8,8 @@ const images = {
   bacon: require('../Images/Bacon.jpg'),
   sausage: require('../Images/Sausage.jpg'),
   toast: require('../Images/Toast.jpg'),
+  nurseBottleDark: require('../Images/Nurse_Bottle2.png'),
+  painRequest: require('../Images/PainRequest2.png'),
 }
 
 export default images

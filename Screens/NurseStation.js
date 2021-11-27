@@ -71,7 +71,18 @@ export default function NurseStation({ navigation, route }) {
         <View style={styles.subheadingContainer}>
           <Text style={styles.subheaderText}>How would you like "a nurse" to assist you?</Text>
         </View>
-        <CustButton title="General Request" icon="pint-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={readNdef}></CustButton>
+        <View style={styles.buttonStyle}>
+          <TouchableOpacity title='buttonTitle' onPress={readNdef} backgroundColor={'transparent'} style={{paddingHorizontal: 10}}>
+            <Text style={{color: '#090C68', fontSize: 26}}>General Request</Text>
+          </TouchableOpacity>
+          <Image style={styles.logo} source={Images.nurseBottleDark} />
+        </View>
+        {/* <View style={styles.buttonStyle}>
+          <TouchableOpacity title='buttonTitle' onPress={readNdef} backgroundColor={'transparent'} style={{paddingHorizontal: 10}}>
+            <Text style={{color: '#090C68', fontSize: 26}}>Pain Indication</Text>
+          </TouchableOpacity>
+          <Image style={{}} source={Images.painRequest} />
+        </View> */}
         <CustButton title="Pain Indication" icon="medkit-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={readNdef}></CustButton>
         <CustButton title="Bathroom" icon="water-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={readNdef}></CustButton>
       </View>
@@ -94,8 +105,8 @@ const styles = StyleSheet.create({
     })
   },
   logo: {
-    height: '50%',
-    width: '50%',
+    height: '100%',
+    width: '10%',
     resizeMode: 'contain',
     tintColor: '#090C68'
   },
@@ -159,5 +170,23 @@ const styles = StyleSheet.create({
         width: '90%',
       }
     })
+  },
+  buttonStyle: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderColor: "#090C68",
+    borderWidth: 3,
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 32,
+    shadowOffset: {width: 4, height: 4},
+    shadowColor: "black",
+    shadowRadius: 4,
+    shadowOpacity: 0.25,
+    margin: 5,
+    //width: Dimensions.get("screen").width * 0.8
   }
 });
