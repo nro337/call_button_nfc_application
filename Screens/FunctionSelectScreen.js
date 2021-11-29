@@ -29,7 +29,7 @@ export default function FunctionSelectScreen({ navigation }) {
         </Svg>
         <View style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", clipPath: "ellipse(54% 100% at 50% 100%)", position: 'absolute', backgroundColor: 'transparent', width: Dimensions.get("screen").width, height: '10%', top: '62%', left: 0}}>
           <Text style={styles.titleText}>How would you like to access this application?</Text>
-          <CustButton title="Patient" icon="" size={20} fontSize={30} color="white" backgroundColor="#090C68" onPress={() => navigation.navigate('Patient Login')}></CustButton>
+          <CustButton title="Patient" icon="" size={20} fontSize={30} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Patient Login')}></CustButton>
           <CustButton title="Staff" icon="" size={20} fontSize={30} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('Staff Login')}></CustButton>
           <CustButton title="NFC Reader" icon="" size={20} fontSize={30} color="#090C68" backgroundColor="white" onPress={() => navigation.navigate('NFC Reader')}></CustButton>
         </View>

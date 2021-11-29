@@ -10,6 +10,9 @@ const images = {
   toast: require('../Images/Toast.jpg'),
   nurseBottleDark: require('../Images/Nurse_Bottle2.png'),
   painRequest: require('../Images/PainRequest2.png'),
+  nurseRequestPic1: require('../Images/NurseRequestPic1.png'),
+  bathroom: require('../Images/Bathroom2.png'),
+  housekeepingBed: require('../Images/HousekeepingBed1.png'),
 }
 
 export default images

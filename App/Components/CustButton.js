@@ -31,6 +31,7 @@ const CustButton = (props, {onPress}) => {
       shadowRadius: 4,
       shadowOpacity: 0.25,
       margin: 5,
+      width: Dimensions.get("screen").width * 0.8
       
       }}>
       <TouchableOpacity title={props.title} color={props.color} onPress={props.onPress} backgroundColor={'transparent'} style={{paddingHorizontal: 10}}>

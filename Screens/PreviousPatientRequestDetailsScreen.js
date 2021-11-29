@@ -23,6 +23,9 @@ export default function PreviousPatientRequestDetailsScreen({ navigation, route 
 
   const [search, setSearch] = useState("");
 
+  const { item } = route.params;
+  console.log(item)
+
   const DATA = [
     {
       id: '0',
@@ -61,27 +64,52 @@ export default function PreviousPatientRequestDetailsScreen({ navigation, route 
   },
   ];
 
-  const Item = ({ title, price, image, quantity }) => (
+  const Item = ({ item }) => (
     <View style={styles.listItem}>
-      <Image style={styles.logo} source={image} />
+      {/* <Image style={styles.logo} source={image} /> */}
       <View style={styles.listTextContainer}>
-        <Text style={styles.listTextHeader}>{title}</Text>
-        <Text style={styles.listTextSubheader}>$ {price}/unit</Text>
+        {item.hasOwnProperty('1') ? <Text style={styles.listTextHeader}>Pain/Medical Request</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('2') ? <Text style={styles.listTextHeader}>Restroom Request</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('3') ? <Text style={styles.listTextHeader}>General Request</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('4') ? <Text style={styles.listTextHeader}>Dining Request</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('5') ? <Text style={styles.listTextHeader}>Housekeeping Request</Text> : <Text style={{display: "none"}}></Text>}
+
+        {item.hasOwnProperty('1') && item['1'] === '1' ? <Text style={styles.listTextSubheader}>HELP</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('1') && item['1'] === '2' ? <Text style={styles.listTextSubheader}>Medication - Tylenol</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('1') && item['1'] === '3' ? <Text style={styles.listTextSubheader}>Medication - Aleve</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('1') && item['1'] === '4' ? <Text style={styles.listTextSubheader}>Medication - Advil</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('1') && item['1'] === '5' ? <Text style={styles.listTextSubheader}>Medication - Motrin</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('1') && item['1'] === '6' ? <Text style={styles.listTextSubheader}>Medication - Celebrex</Text> : <Text style={{display: "none"}}></Text>}
+
+        {item.hasOwnProperty('2') && item['2'] === '1' ? <Text style={styles.listTextSubheader}>Help to/from Restroom</Text> : <Text style={{display: "none"}}></Text>}
+
+        {item.hasOwnProperty('3') && item['3'] === '1' ? <Text style={styles.listTextSubheader}>Help Getting Out of Bed</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('3') && item['3'] === '2' ? <Text style={styles.listTextSubheader}>Change gauze/bandages</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('3') && item['3'] === '3' ? <Text style={styles.listTextSubheader}>Counseling patient/family</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('3') && item['3'] === '4' ? <Text style={styles.listTextSubheader}>Control Lighting</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('3') && item['3'] === '5' ? <Text style={styles.listTextSubheader}>Change Thermostat</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('3') && item['3'] === '6' ? <Text style={styles.listTextSubheader}>Request shower/wash assistance</Text> : <Text style={{display: "none"}}></Text>}
+
+        {item.hasOwnProperty('4') && item['4'] === '1' ? <Text style={styles.listTextSubheader}>Dining Request TBD...</Text> : <Text style={{display: "none"}}></Text>}
+
+        {item.hasOwnProperty('5') && item['5'] === '1' ? <Text style={styles.listTextSubheader}>Request Blankets</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('5') && item['5'] === '2' ? <Text style={styles.listTextSubheader}>Request Pillow</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('5') && item['5'] === '3' ? <Text style={styles.listTextSubheader}>Request Room Cleaning</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('5') && item['5'] === '4' ? <Text style={styles.listTextSubheader}>Out of Toilet Paper</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('5') && item['5'] === '5' ? <Text style={styles.listTextSubheader}>Out of Tissue</Text> : <Text style={{display: "none"}}></Text>}
+        {item.hasOwnProperty('5') && item['5'] === '6' ? <Text style={styles.listTextSubheader}>Out of Soap</Text> : <Text style={{display: "none"}}></Text>}
+        
+        {/* <Text style={styles.listTextSubheader}>$ {price}/unit</Text> */}
       </View>
       <View style={styles.incrementContainer}>
-        <TouchableOpacity>
-          <Ionicons name="add-circle-outline" size={25} color="gray" />
-        </TouchableOpacity>
-        <Text style={styles.incrementText}>{quantity}</Text>
-        <TouchableOpacity>
-          <Ionicons name="remove-circle-outline" size={25} color="gray" />
-        </TouchableOpacity>
+        {/* {item.hasOwnProperty('1') ? <Text style={styles.incrementText}>{item['1']}</Text> : <Text style={{display: "none"}}></Text>} */}
+        {/* <Text style={styles.incrementText}>{quantity}</Text> */}
       </View>
     </View>
   );
 
   const renderItem = ({ item }) => (
-    <Item title={item.title} price={item.price} image={item.image} quantity={item.quantity} />
+    <Item item={item} />
   );
 
 
@@ -89,28 +117,18 @@ export default function PreviousPatientRequestDetailsScreen({ navigation, route 
     <View>
       <View style={styles.container}>
         <View style={styles.headerTextContainer}>
-          <Text style={styles.headerText}>Dining Request</Text>
+          <Text style={styles.headerText}>Request Details</Text>
         </View>
         <View style={styles.subheadingContainer}>
-          <Text style={styles.subheaderText}>Please select which food item you would like.</Text>
-        </View>
-        <View style={styles.searchBarContainer}>
-          <SearchBar
-            placeholder="Type Here..."
-            onChangeText={(search) => setSearch(search)}
-            value={search}
-            style={styles.searchBar}
-            platform={Platform.OS}
-          />
+          <Text style={styles.subheaderText}>Here are the previous request details.</Text>
         </View>
         <View style={styles.flatListContainer}>
           <FlatList
-            data={DATA}
+            data={item.msg_payload}
             renderItem={renderItem}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item._id}
           />
         </View>
-        <CustButton title="Review Order" icon="chevron-forward-outline" size={20} fontSize={25} color="white" backgroundColor="#090C68" onPress={() => navigation.navigate('Order Summary')}></CustButton>
       </View>
     </View>
   );
@@ -205,10 +223,13 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     width: Dimensions.get("screen").width,
+    borderWidth: 2,
+    borderColor: "black",
+    paddingHorizontal: 1,
     // paddingHorizontal: 50,
     ...Platform.select({
       ios: {
-        height: Dimensions.get("window").height * 0.4,
+        height: Dimensions.get("window").height * 0.6,
       },
       android: {
         height: Dimensions.get("window").height - 280,

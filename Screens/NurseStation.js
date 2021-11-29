@@ -11,11 +11,16 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
+  Modal,
+  Pressable,
 } from "react-native";
+import {Picker} from '@react-native-picker/picker';
 import { Images } from "../App/Themes";
 import CustButton from "../App/Components/CustButton";
 
 import NfcManager, { NfcTech, Ndef, NfcEvents } from "react-native-nfc-manager";
+import {Ionicons, FontAwesome5} from '@expo/vector-icons';
 
 export default function NurseStation({ navigation, route }) {
     useEffect(() => {
@@ -23,42 +28,47 @@ export default function NurseStation({ navigation, route }) {
       });
     
     const [scanMessage, setScanMessage] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [figureType, setFigureType] = useState('');
+    const [modalImage, setModalImage] = useState('');
+    const [requestType, setRequestType] = useState('');
+    const [selectedGeneralRequest, setSelectedGeneralRequest] = useState();
+
 
   // Pre-step, call this before any NFC operations
   async function initNfc() {
     await NfcManager.start();
   }
 
-  function readNdef() {
-    const cleanUp = () => {
-      NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
-      NfcManager.setEventListener(NfcEvents.SessionClosed, null);
-    };
+  async function writeNdef({ type, value }) {
+    setModalVisible(false)
+    let result = false;
 
-    return new Promise((resolve) => {
-      let tagFound = null;
-
-      NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
-        tagFound = tag;
-        //https://stackoverflow.com/questions/3195865/converting-byte-array-to-string-in-javascript
-        setScanMessage(
-          String.fromCharCode.apply(null, tagFound.ndefMessage[0].payload).substring(3)
-        );
-        //NfcManager.setAlertMessageIOS(NfcManager.ndefHandler.getNdefMessage(Ndef.text.decodePayload([tagFound])));
-        resolve(tagFound);
-        NfcManager.setAlertMessageIOS("NDEF tag found");
-        NfcManager.unregisterTagEvent().catch(() => 0);
+    try {
+      // Step 1
+      await NfcManager.requestTechnology(NfcTech.Ndef, {
+        alertMessage: "Ready to write some NDEF",
       });
 
-      NfcManager.setEventListener(NfcEvents.SessionClosed, () => {
-        cleanUp();
-        if (!tagFound) {
-          resolve();
+      const bytes = Ndef.encodeMessage([Ndef.textRecord("Hello NFC")]);
+
+      if (bytes) {
+        await NfcManager.ndefHandler // Step2
+          .writeNdefMessage(bytes); // Step3
+
+        if (Platform.OS === "ios") {
+          await NfcManager.setAlertMessageIOS("Successfully write NDEF");
         }
-      });
+      }
 
-      NfcManager.registerTagEvent();
-    });
+      result = true;
+    } catch (ex) {
+      console.warn(ex);
+    }
+
+    // Step 4
+    NfcManager.cancelTechnologyRequest().catch(() => 0);
+    return result;
   }
 
 
@@ -69,22 +79,131 @@ export default function NurseStation({ navigation, route }) {
           <Text style={styles.headerText}>Nurse Station</Text>
         </View>
         <View style={styles.subheadingContainer}>
-          <Text style={styles.subheaderText}>How would you like "a nurse" to assist you?</Text>
+          <Text style={styles.subheaderText}>
+            How would you like a "nurse" to assist you?
+          </Text>
         </View>
         <View style={styles.buttonStyle}>
-          <TouchableOpacity title='buttonTitle' onPress={readNdef} backgroundColor={'transparent'} style={{paddingHorizontal: 10}}>
-            <Text style={{color: '#090C68', fontSize: 26}}>General Request</Text>
+          <TouchableOpacity
+            title="buttonTitle"
+            onPress={() => {
+              setModalVisible(true),
+                setFigureType("nurse figure"),
+                setModalImage("nurseRequestPic1"),
+                setRequestType("General Request");
+            }}
+            backgroundColor={"transparent"}
+            style={{ paddingHorizontal: 10 }}
+          >
+            <Text style={{ color: "#090C68", fontSize: 26 }}>
+              General Request
+            </Text>
           </TouchableOpacity>
           <Image style={styles.logo} source={Images.nurseBottleDark} />
         </View>
-        {/* <View style={styles.buttonStyle}>
-          <TouchableOpacity title='buttonTitle' onPress={readNdef} backgroundColor={'transparent'} style={{paddingHorizontal: 10}}>
-            <Text style={{color: '#090C68', fontSize: 26}}>Pain Indication</Text>
+        <View style={styles.buttonStyle}>
+          <TouchableOpacity
+            title="buttonTitle"
+            onPress={() => {
+              setModalVisible(true),
+                setFigureType("pain indication figure"),
+                setModalImage("painRequest"),
+                setRequestType("Pain Request");
+            }}
+            backgroundColor={"transparent"}
+            style={{ paddingHorizontal: 10 }}
+          >
+            <Text style={{ color: "#090C68", fontSize: 26 }}>
+              Pain Indication
+            </Text>
           </TouchableOpacity>
-          <Image style={{}} source={Images.painRequest} />
-        </View> */}
-        <CustButton title="Pain Indication" icon="medkit-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={readNdef}></CustButton>
-        <CustButton title="Bathroom" icon="water-outline" size={20} fontSize={25} color="#090C68" backgroundColor="white" onPress={readNdef}></CustButton>
+          <Ionicons name="medkit-outline" size={25} color="#090C68" />
+        </View>
+        <View style={styles.buttonStyle}>
+          <TouchableOpacity
+            title="buttonTitle"
+            onPress={() => {
+              setModalVisible(true),
+                setFigureType("bathroom figure"),
+                setModalImage("bathroom"),
+                setRequestType("Bathroom Request");
+            }}
+            backgroundColor={"transparent"}
+            style={{ paddingHorizontal: 10 }}
+          >
+            <Text style={{ color: "#090C68", fontSize: 26 }}>Bathroom</Text>
+          </TouchableOpacity>
+          <FontAwesome5 name="toilet" size={20} color="#090C68" />
+        </View>
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <View style={styles.topContainer}>
+                  <Text style={styles.modalText}>
+                    Please tap the {figureType} to the bedside phone.
+                  </Text>
+                  <TouchableOpacity onPress={() => setModalVisible(false)}>
+                    <Ionicons name="close" size={40} color="black" />
+                  </TouchableOpacity>
+                </View>
+                <View style={{height: 180, width: Dimensions.get("screen").width}}>
+                  <Picker
+                    selectedValue={selectedGeneralRequest}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectedGeneralRequest(itemValue)
+                    }
+                    itemStyle={{color: 'black'}}
+                  >
+                    <Picker.Item label="Help Getting Out of Bed" value="outOfBed" color='black' />
+                    <Picker.Item label="Change Gauze/Bandages" value="changeGauze" color='black'/>
+                    <Picker.Item label="Counseling Patient/Family" value="counseling" color='black'/>
+                    <Picker.Item label="Control Lighting" value="lighting" color='black'/>
+                    <Picker.Item label="Change Thermostat" value="thermostat" color='black'/>
+                    <Picker.Item label="Request Shower/Wash Help" value="shower" color='black'/>
+                  </Picker>
+                </View>
+
+                <View style={styles.modalImageContainer}>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      fontSize: 18,
+                      maxWidth: 200,
+                      textAlign: "center",
+                    }}
+                  >
+                    Request: {requestType}
+                  </Text>
+                  <Image
+                    style={styles.modalImage}
+                    source={Images[`${modalImage}`]}
+                  />
+                </View>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={writeNdef}
+                >
+                  <Text style={styles.textStyle}>Ready to Scan</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+          {/* <Pressable
+            style={[styles.button, styles.buttonOpen]}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.textStyle}>Show Modal</Text>
+          </Pressable> */}
+        </View>
       </View>
     </View>
   );
@@ -109,6 +228,19 @@ const styles = StyleSheet.create({
     width: '10%',
     resizeMode: 'contain',
     tintColor: '#090C68'
+  },
+  modalImage: {
+    height: '50%',
+    width: '50%',
+    resizeMode: "center",
+    
+  },
+  modalImageContainer: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "space-evenly", 
+    alignItems: "center", 
+    height: Dimensions.get("screen").height * 0.3
   },
   headerText: {
     color: "#090C68",
@@ -187,6 +319,56 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOpacity: 0.25,
     margin: 5,
-    //width: Dimensions.get("screen").width * 0.8
+    width: Dimensions.get("screen").width * 0.8
+  },
+
+  centeredView: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    marginTop: Dimensions.get("screen").height * 0.15,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 19,
+    maxWidth: 300,
+  },
+  topContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: Dimensions.get("screen").width
   }
 });
