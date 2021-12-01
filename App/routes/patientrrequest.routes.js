@@ -7,7 +7,8 @@ const cors = require('cors');
 
 router
   .route("/")
-  .get(cors(), requests.findAll);
+  .get(cors(), requests.findAll)
+  .post(cors(), requests.create)
 
 module.exports = router;
 

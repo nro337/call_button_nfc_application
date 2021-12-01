@@ -21,6 +21,7 @@ import CustButton from "../App/Components/CustButton";
 
 import NfcManager, { NfcTech, Ndef, NfcEvents } from "react-native-nfc-manager";
 import {Ionicons, FontAwesome5} from '@expo/vector-icons';
+const dbConfig = require('../App/Config/database.config');
 
 export default function NurseStation({ navigation, route }) {
     useEffect(() => {
@@ -32,7 +33,8 @@ export default function NurseStation({ navigation, route }) {
     const [figureType, setFigureType] = useState('');
     const [modalImage, setModalImage] = useState('');
     const [requestType, setRequestType] = useState('');
-    const [selectedGeneralRequest, setSelectedGeneralRequest] = useState();
+    const [selectedGeneralRequest, setSelectedGeneralRequest] = useState('');
+    const [writeString, setWriteString] = useState('');
 
 
   // Pre-step, call this before any NFC operations
@@ -40,17 +42,58 @@ export default function NurseStation({ navigation, route }) {
     await NfcManager.start();
   }
 
+  async function constructWriteString(){
+    const patient_id_string = "123";
+    const provider_id_string = "1";
+    let message_id_string = "";
+    var requestTypeString = "";
+    const status_string = "new";
+
+    if(requestType === "General Request"){
+      requestTypeString = "3"
+    }
+    var msg_payload = [];
+    var orderObject = {};
+    orderObject[requestTypeString] = selectedGeneralRequest
+    msg_payload.push(JSON.stringify(orderObject));
+
+    await fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        let latest_message_id = data[data.length - 1]["message_id"]
+        message_id_string = (parseInt(latest_message_id) + 1).toString()
+        var myObj = {}
+        myObj['patient_id'] = patient_id_string
+        myObj['provider_id'] = provider_id_string
+        myObj['status'] = status_string
+        myObj['message_id'] = message_id_string
+        myObj['msg_payload'] = msg_payload
+        //console.log(JSON.stringify(myObj))
+        // let final_arr = [];
+        // final_arr.push(`"${patient_id_string}"`, `"${provider_id_string}"`, `"${status_string}"`, `"${message_id_string}"`, `"${msg_payload}"`);
+        //var test = `${final_arr}`;
+        setWriteString(JSON.stringify(myObj))
+      })
+
+  }
+
+  console.log(writeString)
+
   async function writeNdef({ type, value }) {
     setModalVisible(false)
+
+    await constructWriteString();
+
     let result = false;
 
     try {
       // Step 1
       await NfcManager.requestTechnology(NfcTech.Ndef, {
-        alertMessage: "Ready to write some NDEF",
+        alertMessage: "Ready to write to NFC",
       });
 
-      const bytes = Ndef.encodeMessage([Ndef.textRecord("Hello NFC")]);
+      const bytes = Ndef.encodeMessage([Ndef.textRecord(writeString)]);
+      
 
       if (bytes) {
         await NfcManager.ndefHandler // Step2
@@ -163,12 +206,12 @@ export default function NurseStation({ navigation, route }) {
                     }
                     itemStyle={{color: 'black'}}
                   >
-                    <Picker.Item label="Help Getting Out of Bed" value="outOfBed" color='black' />
-                    <Picker.Item label="Change Gauze/Bandages" value="changeGauze" color='black'/>
-                    <Picker.Item label="Counseling Patient/Family" value="counseling" color='black'/>
-                    <Picker.Item label="Control Lighting" value="lighting" color='black'/>
-                    <Picker.Item label="Change Thermostat" value="thermostat" color='black'/>
-                    <Picker.Item label="Request Shower/Wash Help" value="shower" color='black'/>
+                    <Picker.Item label="Help Getting Out of Bed" value="1" color='black' />
+                    <Picker.Item label="Change Gauze/Bandages" value="2" color='black'/>
+                    <Picker.Item label="Counseling Patient/Family" value="3" color='black'/>
+                    <Picker.Item label="Control Lighting" value="4" color='black'/>
+                    <Picker.Item label="Change Thermostat" value="5" color='black'/>
+                    <Picker.Item label="Request Shower/Wash Help" value="6" color='black'/>
                   </Picker>
                 </View>
 
@@ -194,6 +237,7 @@ export default function NurseStation({ navigation, route }) {
                 >
                   <Text style={styles.textStyle}>Ready to Scan</Text>
                 </Pressable>
+                <Button title="Text" onPress={constructWriteString}></Button>
               </View>
             </View>
           </Modal>

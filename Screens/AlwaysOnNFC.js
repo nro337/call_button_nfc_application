@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button, Dimensions, Switch } from "react-native";
+import { StyleSheet, Text, View, Button, Dimensions, Switch, TouchableOpacity } from "react-native";
 
 import NfcManager, { NfcTech, Ndef, NfcEvents } from "react-native-nfc-manager";
 
@@ -11,7 +11,8 @@ export default function AlwaysOnNFC() {
   });
 
   const [scanMessage, setScanMessage] = useState("");
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(true);
+  const [buttonText, setButtonText] = useState('On');
 
   //https://reactnative.dev/docs/switch
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -34,7 +35,7 @@ export default function AlwaysOnNFC() {
         alertMessage: "Ready to write some NDEF",
       });
 
-      const bytes = Ndef.encodeMessage([Ndef.textRecord("Hello NFC")]);
+      const bytes = Ndef.encodeMessage([Ndef.textRecord("Hello 123")]);
 
       if (bytes) {
         await NfcManager.ndefHandler // Step2
@@ -69,10 +70,58 @@ export default function AlwaysOnNFC() {
         //https://stackoverflow.com/questions/3195865/converting-byte-array-to-string-in-javascript
         setScanMessage(
           String.fromCharCode.apply(null, tagFound.ndefMessage[0].payload).substring(3)
+          
         );
         //NfcManager.setAlertMessageIOS(NfcManager.ndefHandler.getNdefMessage(Ndef.text.decodePayload([tagFound])));
         resolve(tagFound);
-        NfcManager.setAlertMessageIOS("NDEF tag found");
+        //var msg = scanMessage.slice(1,-1)
+        var obj = JSON.parse(scanMessage)
+        console.log(JSON.parse(obj.msg_payload))
+        console.log(JSON.parse(scanMessage))
+        // let msg2 = `[${scanMessage}]`
+        // console.log(JSON.parse(msg2))
+        //console.log(JSON.parse(msg2))
+        // let a = `"[${scanMessage}]"`;
+        // console.log(JSON.parse(a))
+
+
+
+        //Posting a new review to the DB
+        // $(document).ready(function(){
+        //   $("#reviewForm").submit(function(e){
+        //       var newTitle = $('#userName').val();
+        //       var newContent = $("#movieFeedback").val();
+        //       var newMovie = $('#movieName').val();
+        //       var newRating = $('#movieRating').val();
+        //       e.preventDefault();
+        //       var data = {};
+        //       data.title = newTitle;
+        //       data.content = newContent;
+        //       data.movie = newMovie;
+        //       data.rating = newRating;
+
+        //       $.ajax({
+        //           type: 'POST',
+        //           data: JSON.stringify(data),
+        //           contentType: 'application/json',
+        //           url: 'http://127.0.0.1:4200/filmreviews',
+        //           success: function(data){
+        //               document.getElementById("reviewForm").reset();
+        //               window.location.replace("http://127.0.0.1:3000/reviews");
+        //               $(document).ready(function(){
+        //                   loadReviewList();
+        //               });
+
+        //           },
+        //           error: function(data){
+        //               alert("error" + data.error);
+        //           }
+        //       })
+        //   });
+        // })
+
+
+        NfcManager.setAlertMessageIOS("NFC tag found");
         NfcManager.unregisterTagEvent().catch(() => 0);
       });
 
@@ -87,21 +136,25 @@ export default function AlwaysOnNFC() {
     });
   }
 
+  if(!isEnabled){
+    setButtonText('Off')
+  } 
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.headerTextContainer}>
-        <Text style={styles.headerText}>NFC Read/Write MVP</Text>
+        <Text style={styles.headerText}>NFC Reader</Text>
       </View>
 
-      <View style={styles.nfcbutton}>
-        <Text style={styles.nfcButtonText}>NFC Reader is OFF</Text>
-      </View>
+      <TouchableOpacity style={styles.nfcbutton} onPress={readNdef}>
+        <Text style={styles.nfcButtonText}>NFC Reader is {buttonText}</Text>
+      </TouchableOpacity>
       <View>
         <Button title="Write" onPress={writeNdef}></Button>
         <Button title="Read" onPress={readNdef}></Button>
       </View>
-      <View style={styles.switchContainer}>
+      {/* <View style={styles.switchContainer}>
         <Text style={{fontSize: 15, fontWeight: "500", paddingRight: 10}}>Off</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#0A0D64" }}
@@ -110,7 +163,7 @@ export default function AlwaysOnNFC() {
           onValueChange={toggleSwitch}
           value={isEnabled}
         />
-      </View>
+      </View> */}
 
 
       <Text>{scanMessage}</Text>
