@@ -47,7 +47,7 @@ export default function NurseStation({ navigation, route }) {
     const provider_id_string = "1";
     let message_id_string = "";
     var requestTypeString = "";
-    const status_string = "new";
+    const status_string = "error";
 
     if(requestType === "General Request"){
       requestTypeString = "3"

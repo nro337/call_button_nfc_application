@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, Button, Dimensions, Switch, TouchableOpacity } 
 
 import NfcManager, { NfcTech, Ndef, NfcEvents } from "react-native-nfc-manager";
 
+const dbConfig = require('../App/Config/database.config');
+
 
 export default function AlwaysOnNFC() {
   useEffect(() => {
@@ -76,14 +78,36 @@ export default function AlwaysOnNFC() {
         resolve(tagFound);
         //var msg = scanMessage.slice(1,-1)
         var obj = JSON.parse(scanMessage)
+        //console.log(JSON.parse(obj.msg_payload))
+        //console.log(JSON.parse(scanMessage))
+        var keyy = Object.keys(JSON.parse(obj.msg_payload))[0]
+        var value = Object.values(JSON.parse(obj.msg_payload))[0]
         console.log(JSON.parse(obj.msg_payload))
-        console.log(JSON.parse(scanMessage))
+        
         // let msg2 = `[${scanMessage}]`
         // console.log(JSON.parse(msg2))
         //console.log(JSON.parse(msg2))
         // let a = `"[${scanMessage}]"`;
         // console.log(JSON.parse(a))
 
+        fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`, {
+          method: 'POST',
+          body: JSON.stringify({
+            'patient_id': obj.patient_id,
+            'provider_id': obj.provider_id,
+            'req_timestamp': new Date(Date.now()),
+            'status': obj.status,
+            'message_id': obj.message_id,
+            'msg_payload': [JSON.parse(obj.msg_payload)],
+          }),
+          // body: obj,
+          headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json",
+          }
+        })
+          .then((response) => response.json())
+          .then((json) => console.log(json))
 
 
         //Posting a new review to the DB

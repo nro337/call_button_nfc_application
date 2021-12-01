@@ -12,9 +12,38 @@ exports.findAll = (req, res) => {
   });
 };
 
-// exports.create = (req, res) => {
-//     var user
-// }
+exports.create = (req, res) => {
+    // Validate request
+    //console.log(req.body);
+    //console.log(res)
+    if (!req.body.status) {
+        return res.status(400).send({
+            message: "Review content can not be empty"
+        });
+    }
+
+    // Create a Request
+    // const request = new patient_requests({
+    //     title: req.body.title || "Untitled Review",
+    //     content: req.body.content,
+    //     movie: req.body.movie,
+    //     rating: req.body.rating,
+    // });
+
+    const request = new patient_requests(req.body)
+    // console.log(request);
+    // console.log(req.body.msg_payload)
+
+    // Save Request in the database
+    request.save()
+        .then(data => {
+            res.send(data);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while creating the Review."
+            });
+        });
+}
 
 
 // // Create and Save a new Review

@@ -22,7 +22,7 @@ module.exports = router;
 //   // app.post('/filmreviews', cors(), reviews.create);
 
 //   // Retrieve all Reviews
-//   app.get('/patient-requests', cors(), requests.findAll);
+//   // app.get('/patient-requests', cors(), requests.findAll);
 
 //   // // Retrieve a single Review with reviewId
 //   // app.get('/filmreviews/:reviewId', cors(), reviews.findOne);
