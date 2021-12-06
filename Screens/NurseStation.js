@@ -49,6 +49,12 @@ export default function NurseStation({ navigation, route }) {
     var requestTypeString = "";
     const status_string = "error";
 
+    if(requestType === "Pain Request"){
+      requestTypeString = "1"
+    }
+    if(requestType === "Bathroom Request"){
+      requestTypeString = "2"
+    }
     if(requestType === "General Request"){
       requestTypeString = "3"
     }
@@ -237,7 +243,7 @@ export default function NurseStation({ navigation, route }) {
                 >
                   <Text style={styles.textStyle}>Ready to Scan</Text>
                 </Pressable>
-                <Button title="Text" onPress={constructWriteString}></Button>
+                {/* <Button title="Text" onPress={constructWriteString}></Button> */}
               </View>
             </View>
           </Modal>

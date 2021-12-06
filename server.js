@@ -50,11 +50,13 @@ app.get('/', (req, res) => {
 // Require Patient Request routes
 const patient_requests = require('./App/routes/patientrrequest.routes.js')
 const providers = require('./App/routes/providers.routes.js')
+const staff = require('./App/routes/staff.routes.js')
 // require('./App/routes/patientrrequest.routes.js')(app);
 // require('./App/routes/providers.routes.js')(app);
 
 app.use('/patient-requests', patient_requests)
 app.use('/providers', providers)
+app.use('/staff', staff)
 // ........
 
 // listen for requests
