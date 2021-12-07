@@ -287,12 +287,12 @@ export default function StaffHomeScreen({ navigation, route }) {
             style={{backgroundColor: 'red',}}
           /> */}
         <View style={styles.topTabContainer}>
-          <NavigationContainer independent={true}>
+          {/* <NavigationContainer independent={true}>
             <Tab.Navigator>
               <Tab.Screen name="Home" component={HomeScreen} />
               <Tab.Screen name="Settings" component={SettingsScreen} />
             </Tab.Navigator>
-          </NavigationContainer>
+          </NavigationContainer> */}
 
             {/* <Tab.Navigator>
               <Tab.Screen name="Home" component={HomeScreen} />
