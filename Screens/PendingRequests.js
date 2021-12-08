@@ -14,8 +14,11 @@ import {
   Keyboard,
   FlatList,
   RefreshControl,
+  Modal,
+  Pressable,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
+import {Picker} from '@react-native-picker/picker';
 import { Images } from "../App/Themes";
 import CustButton from "../App/Components/CustButton";
 import { NavigationContainer } from '@react-navigation/native';
@@ -39,6 +42,15 @@ export default function PendingRequests( {navigation, route, item}) {
   const [tabLength, setTabLength] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [figureType, setFigureType] = useState('');
+  const [modalImage, setModalImage] = useState('');
+  const [requestType, setRequestType] = useState('');
+  const [selectedGeneralRequest, setSelectedGeneralRequest] = useState('');
+  const [currentReq, setCurrentReq] = useState({});
+  const [currentName, setCurrentName] = useState('');
+  // const [writeString, setWriteString] = useState('');
 
   //console.log('hi')
   //console.log(item)
@@ -132,8 +144,15 @@ export default function PendingRequests( {navigation, route, item}) {
       })
   }, [])
 
-  const Item = ({ patient_id, provider_id, timestamp, status, message_id, msg_payload, name }) => (
-    <TouchableOpacity style={styles.listItem} onPress={() => console.log(name)}>
+  const Item = ({ patient_id, provider_id, timestamp, status, message_id, msg_payload, name, item }) => (
+    <TouchableOpacity style={styles.listItem} onPress={() => {
+      setModalVisible(true),
+      setFigureType("nurse figure"),
+      setModalImage("nurseRequestPic1"),
+      setRequestType("General Request"),
+      setCurrentReq(item);
+      setCurrentName(name);
+    }}>
       {/* <FontAwesome5 name={icon} size={40} color="#090C68" /> */}
 
       {Object.keys(msg_payload[0])[0] === "1" ? <FontAwesome5 name="prescription-bottle-alt" size={30} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
@@ -193,7 +212,7 @@ export default function PendingRequests( {navigation, route, item}) {
             name = patient.name;
           }
         })
-        return <Item name={name} patient_id={name} provider_id={item.provider_id} timestamp={item.req_timestamp} status={item.status} message_id={item.message_id} msg_payload={item.msg_payload} />
+        return <Item item={item} name={name} patient_id={name} provider_id={item.provider_id} timestamp={item.req_timestamp} status={item.status} message_id={item.message_id} msg_payload={item.msg_payload} />
     }
   };
 
@@ -209,14 +228,94 @@ export default function PendingRequests( {navigation, route, item}) {
         renderItem={renderItem}
         keyExtractor={(item) => item._id.toString()}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        style={{marginTop: 0}}
         />
     }
     return <View>{content}</View>
   }
 
+  const MyModal = () => {
+    console.log(currentReq)
+    if (currentReq !== undefined){
+      return <View style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+              <View>
+                {Object.keys(currentReq.msg_payload[0])[0] === "1" ? <FontAwesome5 name="prescription-bottle-alt" size={80} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+                {Object.keys(currentReq.msg_payload[0])[0] === "2" ? <FontAwesome5 name="toilet" size={80} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+                {Object.keys(currentReq.msg_payload[0])[0] === "3" ? <FontAwesome5 name="hand-holding-medical" size={80} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+                {Object.keys(currentReq.msg_payload[0])[0] === "4" ? <FontAwesome5 name="coffee" size={80} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+                {Object.keys(currentReq.msg_payload[0])[0] === "5" ? <FontAwesome5 name="bed" size={80} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+              </View>
+              <Text style={styles.listTextHeader}>{currentName}</Text>
+              <View style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                <Text style={{color: 'red', fontSize: 15}}>Request: </Text>
+                {Object.keys(currentReq.msg_payload[0])[0] === "1" ? <Text style={styles.listTextSubheader2}>Pain/Medical Request</Text> : <Text style={{display: "none"}}></Text>}
+                {Object.keys(currentReq.msg_payload[0])[0] === "2" ? <Text style={styles.listTextSubheader2}>Restroom Request</Text> : <Text style={{display: "none"}}></Text>}
+                {Object.keys(currentReq.msg_payload[0])[0] === "3" ? <Text style={styles.listTextSubheader2}>General Request</Text> : <Text style={{display: "none"}}></Text>}
+                {Object.keys(currentReq.msg_payload[0])[0] === "4" ? <Text style={styles.listTextSubheader2}>Dining Request</Text> : <Text style={{display: "none"}}></Text>}
+                {Object.keys(currentReq.msg_payload[0])[0] === "5" ? <Text style={styles.listTextSubheader2}>Housekeeping Request</Text> : <Text style={{display: "none"}}></Text>}
+              </View>
+              
+      </View>
+    }
+  }
+
   return (
     <View>
       <View style={styles.container}>
+      <View style={styles.centeredView}>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <View style={styles.topContainer}>
+                  {/* <Text style={styles.modalText}>
+                    Please tap the {figureType} to the bedside phone.
+                  </Text> */}
+                  <TouchableOpacity onPress={() => setModalVisible(false)}>
+                    <Ionicons name="close" size={40} color="black" />
+                  </TouchableOpacity>
+                </View>
+                <MyModal />
+                <View style={styles.modalImageContainer}>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      fontSize: 18,
+                      maxWidth: 200,
+                      textAlign: "center",
+                    }}
+                  >
+                    Request: {requestType}
+                  </Text>
+                  <Image
+                    style={styles.modalImage}
+                    source={Images[`${modalImage}`]}
+                  />
+                </View>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={console.log('Do things')}
+                >
+                  <Text style={styles.textStyle}>Ready to Scan</Text>
+                </Pressable>
+                {/* <Button title="Text" onPress={constructWriteString}></Button> */}
+              </View>
+            </View>
+          </Modal>
+          {/* <Pressable
+            style={[styles.button, styles.buttonOpen]}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.textStyle}>Show Modal</Text>
+          </Pressable> */}
+        </View>
         <List loading={loading} />
       </View>
     </View>
@@ -239,9 +338,22 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: '100%',
-    width: '30%',
+    width: '10%',
     resizeMode: "contain",
     // tintColor: '#090C68'
+  },
+  modalImage: {
+    height: '50%',
+    width: '50%',
+    resizeMode: "center",
+    
+  },
+  modalImageContainer: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "space-evenly", 
+    alignItems: "center", 
+    height: Dimensions.get("screen").height * 0.3
   },
   headerText: {
     color: "#090C68",
@@ -348,6 +460,11 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     color: "#0A0D64",
   },
+  listTextSubheader2: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#0A0D64",
+  },
   listTextTertiary: {
     fontSize: 10,
     fontWeight: "400",
@@ -383,5 +500,56 @@ const styles = StyleSheet.create({
   topTabContainer: {
     width: Dimensions.get("window").width,
     // marginTop: 200
+  },
+
+  centeredView: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    marginTop: Dimensions.get("screen").height * 0.15,
+    width: Dimensions.get("screen").width,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 19,
+    maxWidth: 300,
+  },
+  topContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    width: Dimensions.get("screen").width,
+    paddingRight: 20
   }
 });

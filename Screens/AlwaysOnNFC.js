@@ -20,24 +20,6 @@ export default function AlwaysOnNFC() {
   //https://reactnative.dev/docs/switch
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
-  async function playSound() {
-    console.log('Loading Sound');
-    const { sound } = await Audio.Sound.createAsync(
-       require('../assets/success.wav')
-    );
-    setSound(sound);
-
-    console.log('Playing Sound');
-    await sound.playAsync(); }
-
-  React.useEffect(() => {
-    return sound
-      ? () => {
-          console.log('Unloading Sound');
-          sound.unloadAsync(); }
-      : undefined;
-  }, [sound]);
-
 
 
   // Pre-step, call this before any NFC operations
