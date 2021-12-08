@@ -45,6 +45,43 @@ exports.create = (req, res) => {
         });
 }
 
+// Update a review identified by the reviewId in the request
+exports.update = (req, res) => {
+    // Validate Request
+    if (!req.body.status) {
+        return res.status(400).send({
+            message: "Request content can not be empty"
+        });
+    }
+
+    // Find request and update it with the request body
+    patient_requests.findByIdAndUpdate(req.params.message_id, {
+        patient_id: req.body.patient_id,
+        provider_id: req.body.provider_id,
+        req_timestamp: new Date(Date.now()),
+        status: req.body.status,
+        message_id: req.body.message_id,
+        msg_payload: [JSON.parse(req.body.msg_payload)],
+    }, { new: true })
+        .then(review => {
+            if (!review) {
+                return res.status(404).send({
+                    message: "Request not found with id " + req.params.message_id
+                });
+            }
+            res.send(review);
+        }).catch(err => {
+            if (err.kind === 'ObjectId') {
+                return res.status(404).send({
+                    message: "Request not found with id " + req.params.message_id
+                });
+            }
+            return res.status(500).send({
+                message: "Error updating request with id " + req.params.message_id
+            });
+        });
+};
+
 
 // // Create and Save a new Review
 // exports.create = (req, res) => {

@@ -234,8 +234,111 @@ export default function PendingRequests( {navigation, route, item}) {
     return <View>{content}</View>
   }
 
+  const MyModalList = ({item}) => {
+    // console.log('hi')
+    // console.log(item)
+    let content = <FlatList
+        data={item.msg_payload}
+        renderItem={renderModalList}
+        keyExtractor={(item) => item[0]}
+        // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        // style={{marginTop: 0}}
+        />
+    if (currentReq !== undefined){
+      return <View style={{height: Dimensions.get("screen").height * 0.3, width: Dimensions.get("screen").width, borderColor: 'black', borderWidth: 2, marginBottom: 20}}>{content}</View>;
+    }
+  }
+
+  const MyModalListItem  = ({item}) => {
+    return <View style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: 'white', width: Dimensions.get("screen").width, height: 60, borderColor: 'black', borderStyle: "solid", borderWidth: 1}}>
+      {/* <Text>{item.msg_payload[0][0]}</Text> */}
+                {(Object.keys(item)[0] === "1" && Object.values(item)[0] === "1") ? <Text style={styles.listTextHeader}>HELP</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "1" && Object.values(item)[0] === "2") ? <Text style={styles.listTextHeader}>Medication - Tylenol</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "1" && Object.values(item)[0] === "3") ? <Text style={styles.listTextHeader}>Medication - Aleve</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "1" && Object.values(item)[0] === "4") ? <Text style={styles.listTextHeader}>Medication - Advil</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "1" && Object.values(item)[0] === "5") ? <Text style={styles.listTextHeader}>Medication - Motrin</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "1" && Object.values(item)[0] === "6") ? <Text style={styles.listTextHeader}>Medication - Celebrex</Text> : <Text style={{display: "none"}}></Text>}
+
+                {(Object.keys(item)[0] === "2" && Object.values(item)[0] === "1") ? <Text style={styles.listTextHeader}>Help to/from Restroom</Text> : <Text style={{display: "none"}}></Text>}
+
+                {(Object.keys(item)[0] === "3" && Object.values(item)[0] === "1") ? <Text style={styles.listTextHeader}>Help Getting Out of Bed</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "3" && Object.values(item)[0] === "2") ? <Text style={styles.listTextHeader}>Change gauze/bandages</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "3" && Object.values(item)[0] === "3") ? <Text style={styles.listTextHeader}>Counseling patient/family</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "3" && Object.values(item)[0] === "4") ? <Text style={styles.listTextHeader}>Control Lighting</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "3" && Object.values(item)[0] === "5") ? <Text style={styles.listTextHeader}>Change Thermostat</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "3" && Object.values(item)[0] === "6") ? <Text style={styles.listTextHeader}>Request shower/wash assistance</Text> : <Text style={{display: "none"}}></Text>}
+
+                {(Object.keys(item)[0] === "4" && Object.values(item)[0] === "1") ? <Text style={styles.listTextHeader}>Request shower/wash assistance</Text> : <Text style={{display: "none"}}></Text>}
+
+                {(Object.keys(item)[0] === "5" && Object.values(item)[0] === "1") ? <Text style={styles.listTextHeader}>Request Blankets</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "5" && Object.values(item)[0] === "2") ? <Text style={styles.listTextHeader}>Request Pillow</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "5" && Object.values(item)[0] === "3") ? <Text style={styles.listTextHeader}>Request Room Cleaning</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "5" && Object.values(item)[0] === "4") ? <Text style={styles.listTextHeader}>Out of Toilet Paper</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "5" && Object.values(item)[0] === "5") ? <Text style={styles.listTextHeader}>Out of Tissues</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(item)[0] === "5" && Object.values(item)[0] === "6") ? <Text style={styles.listTextHeader}>Out of Soap</Text> : <Text style={{display: "none"}}></Text>}
+    </View>
+  }
+
+  const renderModalList = ({item}) => {
+    return <MyModalListItem item={item} />
+  }
+
+  async function updateRequest(){
+    console.log(typeof(currentReq.msg_payload))
+    var payload = []
+    Object.keys(currentReq.msg_payload).forEach(item => {
+      var newPayload = {}
+      let key = Object.keys(currentReq.msg_payload[item])[0]
+      let value = Object.values(currentReq.msg_payload[item])[0]
+      newPayload[key] = value
+      // console.log(Object.keys(currentReq.msg_payload[item])[0])
+      // console.log(Object.values(currentReq.msg_payload[item])[0])
+      console.log('hi')
+      console.log(typeof(newPayload))
+      payload.push(newPayload)
+    })
+    console.log('abc')
+    console.log(typeof(payload))
+    //console.log(typeof(JSON.stringify(payload)))
+    console.log(Object.keys(payload))
+    var str = JSON.stringify(payload)
+    console.log(typeof(str))
+    console.log(currentReq.patient_id)
+    var body = {}
+      body['patient_id'] = currentReq.patient_id,
+      body['provider_id'] = currentReq.provider_id,
+      body['req_timestamp'] = new Date(Date.now()),
+      body['status'] = 'accepted',
+      body['message_id'] = currentReq.message_id,
+      body['msg_payload'] = payload,
+    // for (let i=0, i < Object.keys(currentReq.msg_payload).length, i++){
+    //   console.log(JSON.stringify(Object.values(currentReq.msg_payload)[i]))
+    // }
+    console.log(JSON.stringify(body))
+
+    // console.log(typeof(JSON.stringify(currentReq.msg_payload)));
+    // console.log(JSON.stringify(Object.values(currentReq.msg_payload)[0]));
+    await fetch(`http://${dbConfig.mobileURL}:5000/patient-requests:message_id`, {
+      method: 'POST',
+      // body: JSON.stringify({
+      //   'patient_id': currentReq.patient_id,
+      //   'provider_id': currentReq.provider_id,
+      //   'req_timestamp': new Date(Date.now()),
+      //   'status': 'accepted',
+      //   'message_id': currentReq.message_id,
+      //   'msg_payload': payload,
+      // }),
+      body: JSON.stringify(body),
+      headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+      }
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json))
+  }
+
   const MyModal = () => {
-    console.log(currentReq)
     if (currentReq !== undefined){
       return <View style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
               <View>
@@ -254,7 +357,34 @@ export default function PendingRequests( {navigation, route, item}) {
                 {Object.keys(currentReq.msg_payload[0])[0] === "4" ? <Text style={styles.listTextSubheader2}>Dining Request</Text> : <Text style={{display: "none"}}></Text>}
                 {Object.keys(currentReq.msg_payload[0])[0] === "5" ? <Text style={styles.listTextSubheader2}>Housekeeping Request</Text> : <Text style={{display: "none"}}></Text>}
               </View>
-              
+              <View>
+                {/* {(Object.keys(currentReq.msg_payload[0])[0] === "1" && Object.values(currentReq.msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>HELP</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "1" && Object.values(currentReq.msg_payload[0])[0] === "2") ? <Text style={styles.badgeText}>Medication - Tylenol</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "1" && Object.values(currentReq.msg_payload[0])[0] === "3") ? <Text style={styles.badgeText}>Medication - Aleve</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "1" && Object.values(currentReq.msg_payload[0])[0] === "4") ? <Text style={styles.badgeText}>Medication - Advil</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "1" && Object.values(currentReq.msg_payload[0])[0] === "5") ? <Text style={styles.badgeText}>Medication - Motrin</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "1" && Object.values(currentReq.msg_payload[0])[0] === "6") ? <Text style={styles.badgeText}>Medication - Celebrex</Text> : <Text style={{display: "none"}}></Text>}
+
+                {(Object.keys(currentReq.msg_payload[0])[0] === "2" && Object.values(currentReq.msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>Help to/from Restroom</Text> : <Text style={{display: "none"}}></Text>}
+
+                {(Object.keys(currentReq.msg_payload[0])[0] === "3" && Object.values(currentReq.msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>Help Getting Out of Bed</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "3" && Object.values(currentReq.msg_payload[0])[0] === "2") ? <Text style={styles.badgeText}>Change gauze/bandages</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "3" && Object.values(currentReq.msg_payload[0])[0] === "3") ? <Text style={styles.badgeText}>Counseling patient/family</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "3" && Object.values(currentReq.msg_payload[0])[0] === "4") ? <Text style={styles.badgeText}>Control Lighting</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "3" && Object.values(currentReq.msg_payload[0])[0] === "5") ? <Text style={styles.badgeText}>Change Thermostat</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "3" && Object.values(currentReq.msg_payload[0])[0] === "6") ? <Text style={styles.badgeText}>Request shower/wash assistance</Text> : <Text style={{display: "none"}}></Text>}
+
+                {(Object.keys(currentReq.msg_payload[0])[0] === "4" && Object.values(currentReq.msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>Request shower/wash assistance</Text> : <Text style={{display: "none"}}></Text>}
+
+                {(Object.keys(currentReq.msg_payload[0])[0] === "5" && Object.values(currentReq.msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>Request Blankets</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "5" && Object.values(currentReq.msg_payload[0])[0] === "2") ? <Text style={styles.badgeText}>Request Pillow</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "5" && Object.values(currentReq.msg_payload[0])[0] === "3") ? <Text style={styles.badgeText}>Request Room Cleaning</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "5" && Object.values(currentReq.msg_payload[0])[0] === "4") ? <Text style={styles.badgeText}>Out of Toilet Paper</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "5" && Object.values(currentReq.msg_payload[0])[0] === "5") ? <Text style={styles.badgeText}>Out of Tissues</Text> : <Text style={{display: "none"}}></Text>}
+                {(Object.keys(currentReq.msg_payload[0])[0] === "5" && Object.values(currentReq.msg_payload[0])[0] === "6") ? <Text style={styles.badgeText}>Out of Soap</Text> : <Text style={{display: "none"}}></Text>} */}
+                <MyModalList item={currentReq} />
+                {/* <Text>{currentReq.msg_payload}</Text> */}
+              </View>
       </View>
     }
   }
@@ -283,7 +413,7 @@ export default function PendingRequests( {navigation, route, item}) {
                   </TouchableOpacity>
                 </View>
                 <MyModal />
-                <View style={styles.modalImageContainer}>
+                {/* <View style={styles.modalImageContainer}>
                   <Text
                     style={{
                       fontWeight: "600",
@@ -298,13 +428,15 @@ export default function PendingRequests( {navigation, route, item}) {
                     style={styles.modalImage}
                     source={Images[`${modalImage}`]}
                   />
-                </View>
-                <Pressable
+                </View> */}
+                <CustButton title="Accept" icon="" size={20} fontSize={25} color="white" backgroundColor="#090C68" onPress={() => updateRequest()}></CustButton>
+                <CustButton title="Deny" icon="" size={20} fontSize={25} color="white" backgroundColor="#090C68" onPress={() => console.log('Deny')}></CustButton>
+                {/* <Pressable
                   style={[styles.button, styles.buttonClose]}
-                  onPress={console.log('Do things')}
+                  onPress={() => console.log('Do things')}
                 >
                   <Text style={styles.textStyle}>Ready to Scan</Text>
-                </Pressable>
+                </Pressable> */}
                 {/* <Button title="Text" onPress={constructWriteString}></Button> */}
               </View>
             </View>

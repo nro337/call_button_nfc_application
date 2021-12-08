@@ -33,7 +33,7 @@ export default function NurseStation({ navigation, route }) {
     const [figureType, setFigureType] = useState('');
     const [modalImage, setModalImage] = useState('');
     const [requestType, setRequestType] = useState('');
-    const [selectedGeneralRequest, setSelectedGeneralRequest] = useState('');
+    const [selectedGeneralRequest, setSelectedGeneralRequest] = useState('1');
     const [writeString, setWriteString] = useState('');
 
 
@@ -82,6 +82,61 @@ export default function NurseStation({ navigation, route }) {
       })
 
   }
+
+  const MyPicker = () => {
+    console.log(selectedGeneralRequest)
+    if(requestType === "Pain Request"){
+      return (
+        <Picker
+        selectedValue={selectedGeneralRequest}
+        onValueChange={(itemValue, itemIndex) =>
+          setSelectedGeneralRequest(itemValue)
+        }
+        itemStyle={{color: 'black'}}
+      >
+        <Picker.Item label="HELP" value="1" color='black' />
+        <Picker.Item label="Tylenol" value="2" color='black'/>
+        <Picker.Item label="Aleve" value="3" color='black'/>
+        <Picker.Item label="Advil" value="4" color='black'/>
+        <Picker.Item label="Motrin" value="5" color='black'/>
+        <Picker.Item label="Celebrex" value="6" color='black'/>
+      </Picker>
+      )
+    } else if(requestType === "Bathroom Request") {
+      return (
+        <Picker
+        selectedValue={selectedGeneralRequest}
+        onValueChange={(itemValue, itemIndex) =>
+          setSelectedGeneralRequest(itemValue)
+        }
+        itemStyle={{color: 'black'}}
+      >
+        <Picker.Item label="Help Getting to/from Restroom" value="1" color='black' />
+      </Picker>
+      )
+    } else if(requestType === "General Request") {
+      return (
+        <Picker
+        selectedValue={selectedGeneralRequest}
+        onValueChange={(itemValue, itemIndex) =>
+          setSelectedGeneralRequest(itemValue)
+        }
+        itemStyle={{color: 'black'}}
+      >
+        <Picker.Item label="Help Getting Out of Bed" value="1" color='black' />
+        <Picker.Item label="Change Gauze/Bandages" value="2" color='black'/>
+        <Picker.Item label="Counseling Patient/Family" value="3" color='black'/>
+        <Picker.Item label="Control Lighting" value="4" color='black'/>
+        <Picker.Item label="Change Thermostat" value="5" color='black'/>
+        <Picker.Item label="Request Shower/Wash Help" value="6" color='black'/>
+      </Picker>
+      )
+    }
+  }
+
+  // const renderPicker = ({item}) => {
+  //   return <MyPicker />
+  // }
 
   console.log(writeString)
 
@@ -205,7 +260,8 @@ export default function NurseStation({ navigation, route }) {
                   </TouchableOpacity>
                 </View>
                 <View style={{height: 180, width: Dimensions.get("screen").width}}>
-                  <Picker
+                  <MyPicker />
+                  {/* <Picker
                     selectedValue={selectedGeneralRequest}
                     onValueChange={(itemValue, itemIndex) =>
                       setSelectedGeneralRequest(itemValue)
@@ -218,7 +274,7 @@ export default function NurseStation({ navigation, route }) {
                     <Picker.Item label="Control Lighting" value="4" color='black'/>
                     <Picker.Item label="Change Thermostat" value="5" color='black'/>
                     <Picker.Item label="Request Shower/Wash Help" value="6" color='black'/>
-                  </Picker>
+                  </Picker> */}
                 </View>
 
                 <View style={styles.modalImageContainer}>

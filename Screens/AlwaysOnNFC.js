@@ -10,9 +10,10 @@ const dbConfig = require('../App/Config/database.config');
 export default function AlwaysOnNFC() {
   useEffect(() => {
     initNfc();
+    readNdef()
   });
 
-  const [scanMessage, setScanMessage] = useState("");
+  const [scanMessage, setScanMessage] = useState('');
   const [isEnabled, setIsEnabled] = useState(true);
   const [buttonText, setButtonText] = useState('On');
   const [sound, setSound] = React.useState();
@@ -65,23 +66,33 @@ export default function AlwaysOnNFC() {
 
     return new Promise((resolve) => {
       let tagFound = null;
+      NfcManager.registerTagEvent({
+        isReaderModeEnabled: true
+      });
 
       NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
         tagFound = tag;
+        resolve(tagFound);
         //https://stackoverflow.com/questions/3195865/converting-byte-array-to-string-in-javascript
         setScanMessage(
           String.fromCharCode.apply(null, tagFound.ndefMessage[0].payload).substring(3)
           
         );
+        //setTimeout(() => {console.log('waiting')}, 500)
+        
+        if(JSON.parse(scanMessage) !== undefined){
+          var obj = JSON.parse(scanMessage)
+          setTimeout(() => {console.log('waiting')}, 500)
+        }
         //NfcManager.setAlertMessageIOS(NfcManager.ndefHandler.getNdefMessage(Ndef.text.decodePayload([tagFound])));
-        resolve(tagFound);
+        //resolve(tagFound);
         //var msg = scanMessage.slice(1,-1)
-        var obj = JSON.parse(scanMessage)
+
         //console.log(JSON.parse(obj.msg_payload))
         //console.log(JSON.parse(scanMessage))
-        var keyy = Object.keys(JSON.parse(obj.msg_payload))[0]
-        var value = Object.values(JSON.parse(obj.msg_payload))[0]
-        console.log(JSON.parse(obj.msg_payload))
+        //var keyy = Object.keys(JSON.parse(obj.msg_payload))[0]
+        //var value = Object.values(JSON.parse(obj.msg_payload))[0]
+        //console.log(JSON.parse(obj.msg_payload))
         
         // let msg2 = `[${scanMessage}]`
         // console.log(JSON.parse(msg2))
@@ -147,7 +158,7 @@ export default function AlwaysOnNFC() {
         setIsEnabled(isEnabled => !isEnabled)
         delay();
 
-        NfcManager.setAlertMessageIOS("NFC tag found");
+        //NfcManager.setAlertMessageIOS("NFC tag found");
         NfcManager.unregisterTagEvent().catch(() => 0);
       });
 
@@ -158,7 +169,7 @@ export default function AlwaysOnNFC() {
         }
       });
 
-      NfcManager.registerTagEvent();
+      //NfcManager.registerTagEvent();
     });
   }
 
@@ -202,7 +213,8 @@ export default function AlwaysOnNFC() {
       </View> */}
 
 
-      <Text>{scanMessage}</Text>
+      {/* <Text>{scanMessage}</Text> */}
+      <View></View>
     </View>
   );
 }

@@ -10,6 +10,10 @@ router
   .get(cors(), requests.findAll)
   .post(cors(), requests.create)
 
+router
+  .route("/:message_id")
+  .put(cors(), requests.update)
+
 module.exports = router;
 
 // module.exports = (app) => {
