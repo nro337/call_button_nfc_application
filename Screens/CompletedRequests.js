@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { Images } from "../App/Themes";
@@ -35,19 +36,33 @@ export default function CompletedRequests({ navigation, route }) {
   const [allReq, setAllReq] = useState([]);
   const [allStaff, setAllStaff] = useState([]);
   const [allPatient, setAllPatient] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
-      .then((resp) => resp.json())
-      .then((data) => {
+  const loadRequests = async () => {
+    setLoading(true)
+    setAllReq([])
+    await fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
+    .then((resp) => resp.json())
+    .then((data) => {
         data.forEach(request => {
 
           setAllReq(allReq => [...allReq, request])
           //allReq.push(request)
         })
         setReqHeader(data[0].patient_id)
+        setLoading(false)
       })
-  }, [])
+  }
+
+  const onRefresh = React.useCallback(() => {
+    console.log('refreshing')
+    setRefreshing(true);
+    loadRequests();
+    setRefreshing(false);
+  }, []);
+
+  useEffect(() => { loadRequests() }, []);
 
   //console.log(allReq);
 
@@ -147,16 +162,28 @@ export default function CompletedRequests({ navigation, route }) {
         return <Item name={name} patient_id={name} provider_id={item.provider_id} timestamp={item.req_timestamp} status={item.status} message_id={item.message_id} msg_payload={item.msg_payload} />
     }  };
 
+  const List = ({error, loading}) => {
+      let content;
+      if (error){
+        content = <View><Text>Error</Text></View>
+      } else if (loading === true){
+        content = <View><ActivityIndicator style={styles.activityIndicator} size="large" color="black" /></View>
+      } else {
+        content = <FlatList
+          data={allReq}
+          renderItem={renderItem}
+          keyExtractor={(item) => item._id.toString()}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          style={{width: Dimensions.get("screen").width}}
+          />
+      }
+      return <View>{content}</View>
+  }
+
   return (
     <View>
       <View style={styles.container}>
-        <View style={styles.flatListContainer}>
-          <FlatList
-            data={allReq}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id.toString()}
-          />
-        </View>
+        <List loading={loading}/>
       </View>
     </View>
   );

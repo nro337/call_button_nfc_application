@@ -15,11 +15,28 @@ export default function AlwaysOnNFC() {
   const [scanMessage, setScanMessage] = useState("");
   const [isEnabled, setIsEnabled] = useState(true);
   const [buttonText, setButtonText] = useState('On');
+  const [sound, setSound] = React.useState();
 
   //https://reactnative.dev/docs/switch
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
+  async function playSound() {
+    console.log('Loading Sound');
+    const { sound } = await Audio.Sound.createAsync(
+       require('../assets/success.wav')
+    );
+    setSound(sound);
 
+    console.log('Playing Sound');
+    await sound.playAsync(); }
+
+  React.useEffect(() => {
+    return sound
+      ? () => {
+          console.log('Unloading Sound');
+          sound.unloadAsync(); }
+      : undefined;
+  }, [sound]);
 
 
 
@@ -90,6 +107,7 @@ export default function AlwaysOnNFC() {
         // let a = `"[${scanMessage}]"`;
         // console.log(JSON.parse(a))
 
+        //////////////////////////////////////////////////////
         fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`, {
           method: 'POST',
           body: JSON.stringify({
@@ -108,6 +126,7 @@ export default function AlwaysOnNFC() {
         })
           .then((response) => response.json())
           .then((json) => console.log(json))
+          //////////////////////////////////////////////////////
 
 
         //Posting a new review to the DB
@@ -143,7 +162,8 @@ export default function AlwaysOnNFC() {
         //       })
         //   });
         // })
-
+        setIsEnabled(isEnabled => !isEnabled)
+        delay();
 
         NfcManager.setAlertMessageIOS("NFC tag found");
         NfcManager.unregisterTagEvent().catch(() => 0);
@@ -160,9 +180,17 @@ export default function AlwaysOnNFC() {
     });
   }
 
-  if(!isEnabled){
+  // if(!isEnabled){
+  //   setButtonText('Off')
+  // } 
+  function delay() {
+    //playSound()
     setButtonText('Off')
-  } 
+    setTimeout(() => {
+      setButtonText('On')
+      setIsEnabled(true)
+    }, 5000);
+  }
 
   return (
     <View style={styles.container}>
@@ -171,13 +199,15 @@ export default function AlwaysOnNFC() {
         <Text style={styles.headerText}>NFC Reader</Text>
       </View>
 
-      <TouchableOpacity style={styles.nfcbutton} onPress={readNdef}>
-        <Text style={styles.nfcButtonText}>NFC Reader is {buttonText}</Text>
+      <TouchableOpacity style={[isEnabled ? styles.nfcbutton : styles.nfcButtonDisabled]} onPress={readNdef} disabled={!isEnabled}>
+        <Text style={[isEnabled ? styles.nfcButtonText : styles.nfcButtonTextDisabled]}>NFC Reader is {buttonText}</Text>
       </TouchableOpacity>
-      <View>
+      <View></View>
+      {/* <View>
         <Button title="Write" onPress={writeNdef}></Button>
         <Button title="Read" onPress={readNdef}></Button>
-      </View>
+        <Button title="Toggle" onPress={() => [setIsEnabled(isEnabled => !isEnabled), delay()]}></Button>
+      </View> */}
       {/* <View style={styles.switchContainer}>
         <Text style={{fontSize: 15, fontWeight: "500", paddingRight: 10}}>Off</Text>
         <Switch
@@ -252,8 +282,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
   },
+  nfcButtonDisabled: {
+    borderRadius: 256,
+    width: 300,
+    height: 300,
+    backgroundColor: "white",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    borderStyle: "solid",
+    borderWidth: 3
+  },
   nfcButtonText: {
     color: "white",
+    fontSize: 30,
+  },
+  nfcButtonTextDisabled: {
+    color: "#0A0D64",
     fontSize: 30,
   },
   switchContainer: {

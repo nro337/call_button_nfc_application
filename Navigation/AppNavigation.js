@@ -84,27 +84,37 @@ export default function AppNavigation({navigation}) {
         </View>
       <Tab.Navigator
         screenOptions={({route}) => ({
-          tabBarLabelStyle: {color: 'white'},
-          tabBarStyle: {backgroundColor: '#090C68', borderColor: 'white', borderRadius: 1, borderStyle: "solid"},
-          tabBarIcon: ({focused, color, size}) => {
-            let iconName;
+          tabBarLabel: ({focused}) => {
+            let iconColor;
             if(route.name === 'Pending'){
-              focused ? color="white" : color="gray"
-              iconName = 'numeric-' + pendingTabLength.length.toString();
+              iconColor = focused ? 'yellow' : 'white'
+            } else if(route.name === 'Accepted'){
+              iconColor = focused ? 'lightgreen' : 'white'
+            } else {
+              iconColor = focused ? 'red' : 'white'
             }
-            else if(route.name === 'Accepted'){
-              focused ? color="white" : color="gray"
-              iconName = 'numeric-' + acceptedTabLength.length.toString();
-            }
-            else if(route.name === 'Completed/Denied'){
-              focused ? color="white" : color="gray"
-              iconName = 'numeric-' + completedDeniedTabLength.length.toString();
-            }
-
-            return <View style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-              <MaterialCommunityIcons name={iconName} size={30} color={color} />
-            </View>
+            return <Text style={{color: iconColor, fontSize: 20, textAlign: "center"}}>{route.name}</Text>
           },
+          tabBarStyle: {backgroundColor: '#090C68', borderColor: 'white', borderRadius: 1, borderStyle: "solid"},
+          // tabBarIcon: ({focused, color, size}) => {
+          //   let iconName;
+          //   if(route.name === 'Pending'){
+          //     focused ? color="white" : color="gray"
+          //     iconName = 'numeric-' + pendingTabLength.length.toString();
+          //   }
+          //   else if(route.name === 'Accepted'){
+          //     focused ? color="white" : color="gray"
+          //     iconName = 'numeric-' + acceptedTabLength.length.toString();
+          //   }
+          //   else if(route.name === 'Completed/Denied'){
+          //     focused ? color="white" : color="gray"
+          //     iconName = 'numeric-' + completedDeniedTabLength.length.toString();
+          //   }
+
+          //   return <View style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+          //     <MaterialCommunityIcons name={iconName} size={30} color={color} />
+          //   </View>
+          // },
           tabBarIconStyle: {}
         })}
       >

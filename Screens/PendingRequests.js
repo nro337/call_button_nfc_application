@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { Images } from "../App/Themes";
@@ -36,27 +37,65 @@ export default function PendingRequests( {navigation, route, item}) {
   const [allStaff, setAllStaff] = useState([]);
   const [allPatient, setAllPatient] = useState([]);
   const [tabLength, setTabLength] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   //console.log('hi')
   //console.log(item)
 
 
-  useEffect(() => {
-    let i=0;
-    fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
-      .then((resp) => resp.json())
-      .then((data) => {
-        data.forEach(request => {
-          if(request.status === 'error'){
-            setTabLength(tabLength => [...tabLength, request])
-            //setTabLength()
-          }
-          setAllReq(allReq => [...allReq, request])
-          //allReq.push(request)
-        })
-        setReqHeader(data[0].patient_id)
+  //https://stackoverflow.com/questions/53332321/react-hook-warnings-for-async-function-in-useeffect-useeffect-function-must-ret
+  // useEffect(() => {
+  //   let i=0;
+  //   setLoading(true)
+  //   async function getPatientReq() {
+  //     await fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
+  //     .then((resp) => resp.json())
+  //     .then((data) => {
+  //       data.forEach(request => {
+  //         if(request.status === 'error'){
+  //           setTabLength(tabLength => [...tabLength, request])
+  //           //setTabLength()
+  //         }
+  //         setAllReq(allReq => [...allReq, request])
+  //         //allReq.push(request)
+  //       })
+  //       setReqHeader(data[0].patient_id)
+  //       setLoading(false)
+  //     })
+  //   }
+
+  //   getPatientReq()
+  // }, [])
+  
+
+  const loadRequests = async () => {
+    setLoading(true)
+    setAllReq([])
+    await fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
+    .then((resp) => resp.json())
+    .then((data) => {
+      data.forEach(request => {
+        if(request.status === 'error'){
+          setTabLength(tabLength => [...tabLength, request])
+          //setTabLength()
+        }
+        setAllReq(allReq => [...allReq, request])
+        //allReq.push(request)
       })
-  }, [])
+      setReqHeader(data[0].patient_id)
+      setLoading(false)
+    })
+  }
+
+  const onRefresh = React.useCallback(() => {
+    console.log('refreshing')
+    setRefreshing(true);
+    loadRequests();
+    setRefreshing(false);
+  }, []);
+
+  useEffect(() => { loadRequests() }, []);
 
   //console.log(allReq);
 
@@ -110,8 +149,8 @@ export default function PendingRequests( {navigation, route, item}) {
         {Object.keys(msg_payload[0])[0] === "3" ? <Text style={styles.listTextSubheader}>General Request</Text> : <Text style={{display: "none"}}></Text>}
         {Object.keys(msg_payload[0])[0] === "4" ? <Text style={styles.listTextSubheader}>Dining Request</Text> : <Text style={{display: "none"}}></Text>}
         {Object.keys(msg_payload[0])[0] === "5" ? <Text style={styles.listTextSubheader}>Housekeeping Request</Text> : <Text style={{display: "none"}}></Text>}
-        
-        <Text style={styles.listTextTertiary}>{new Date(timestamp).toLocaleString('en-US')}</Text>
+        {/* https://stackoverflow.com/questions/3224834/get-difference-between-2-dates-in-javascript */}
+        <Text style={styles.listTextTertiary}>{Math.ceil((new Date(Date.now()) - new Date(timestamp).getTime()) / (1000 * 60))} mins ago</Text>
       </View>
       <View style={styles.badgeAndCaretContainer}>
         <View style={styles.badge}>
@@ -158,16 +197,27 @@ export default function PendingRequests( {navigation, route, item}) {
     }
   };
 
+  const List = ({error, loading}) => {
+    let content;
+    if (error){
+      content = <View><Text>Error</Text></View>
+    } else if (loading === true){
+      content = <View><ActivityIndicator style={styles.activityIndicator} size="large" color="black" /></View>
+    } else {
+      content = <FlatList
+        data={allReq}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id.toString()}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        />
+    }
+    return <View>{content}</View>
+  }
+
   return (
     <View>
       <View style={styles.container}>
-        <View style={styles.flatListContainer}>
-          <FlatList
-            data={allReq}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id.toString()}
-          />
-        </View>
+        <List loading={loading} />
       </View>
     </View>
   );

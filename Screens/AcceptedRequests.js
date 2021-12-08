@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { Images } from "../App/Themes";
@@ -35,19 +36,33 @@ export default function AcceptedRequests({ navigation, route }) {
   const [allReq, setAllReq] = useState([]);
   const [allStaff, setAllStaff] = useState([]);
   const [allPatient, setAllPatient] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
-      .then((resp) => resp.json())
-      .then((data) => {
+  const loadRequests = async () => {
+    setLoading(true)
+    setAllReq([])
+    await fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
+    .then((resp) => resp.json())
+    .then((data) => {
         data.forEach(request => {
 
           setAllReq(allReq => [...allReq, request])
           //allReq.push(request)
         })
         setReqHeader(data[0].patient_id)
+        setLoading(false)
       })
-  }, [])
+  }
+
+  const onRefresh = React.useCallback(() => {
+    console.log('refreshing')
+    setRefreshing(true);
+    loadRequests();
+    setRefreshing(false);
+  }, []);
+
+  useEffect(() => { loadRequests() }, []);
 
   //console.log(allReq);
 
@@ -95,7 +110,7 @@ export default function AcceptedRequests({ navigation, route }) {
         {Object.keys(msg_payload[0])[0] === "5" ? <FontAwesome5 name="bed" size={30} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
 
       <View style={styles.listTextContainer}>
-      {/* <Text style={styles.listTextHeader}>{name}</Text> */}
+      <Text style={styles.listTextHeader}>{name}</Text>
         {Object.keys(msg_payload[0])[0] === "1" ? <Text style={styles.listTextSubheader}>Pain/Medical Request</Text> : <Text style={{display: "none"}}></Text>}
         {Object.keys(msg_payload[0])[0] === "2" ? <Text style={styles.listTextSubheader}>Restroom Request</Text> : <Text style={{display: "none"}}></Text>}
         {Object.keys(msg_payload[0])[0] === "3" ? <Text style={styles.listTextSubheader}>General Request</Text> : <Text style={{display: "none"}}></Text>}
@@ -150,16 +165,28 @@ export default function AcceptedRequests({ navigation, route }) {
     }
   };
 
+  const List = ({error, loading}) => {
+    let content;
+    if (error){
+      content = <View><Text>Error</Text></View>
+    } else if (loading === true){
+      content = <View><ActivityIndicator style={styles.activityIndicator} size="large" color="black" /></View>
+    } else {
+      content = <FlatList
+        data={allReq}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id.toString()}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        style={{width: Dimensions.get("screen").width}}
+        />
+    }
+    return <View>{content}</View>
+}
+
   return (
     <View>
       <View style={styles.container}>
-        <View style={styles.flatListContainer}>
-          <FlatList
-            data={allReq}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id.toString()}
-          />
-        </View>
+        <List loading={loading} />
       </View>
     </View>
   );
