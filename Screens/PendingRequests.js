@@ -33,6 +33,8 @@ import { FontAwesome5 } from '@expo/vector-icons';
 export default function PendingRequests( {navigation, route, item}) {
   const [reqHeader, setReqHeader] = useState('')
   const [allReq, setAllReq] = useState([]);
+  const [allStaff, setAllStaff] = useState([]);
+  const [allPatient, setAllPatient] = useState([]);
   const [tabLength, setTabLength] = useState([]);
 
   //console.log('hi')
@@ -72,14 +74,27 @@ export default function PendingRequests( {navigation, route, item}) {
       .then((resp3) => resp3.json())
       .then((data3) => {
         data3.forEach(staff => {
-          console.log(staff)
+          //console.log(staff)
+          setAllStaff(allStaff => [...allStaff, staff])
         })
         //setReqHeader(data[0].patient_id)
       })
   }, [])
 
-  const Item = ({ patient_id, provider_id, timestamp, status, message_id, msg_payload }) => (
-    <TouchableOpacity style={styles.listItem} onPress={() => console.log(patient_id)}>
+  useEffect(() => {
+    fetch(`http://${dbConfig.mobileURL}:5000/patient`)
+      .then((resp4) => resp4.json())
+      .then((data4) => {
+        data4.forEach(patient => {
+          //console.log(patient)
+          setAllPatient(allPatient => [...allPatient, patient])
+        })
+        //setReqHeader(data[0].patient_id)
+      })
+  }, [])
+
+  const Item = ({ patient_id, provider_id, timestamp, status, message_id, msg_payload, name }) => (
+    <TouchableOpacity style={styles.listItem} onPress={() => console.log(name)}>
       {/* <FontAwesome5 name={icon} size={40} color="#090C68" /> */}
 
       {Object.keys(msg_payload[0])[0] === "1" ? <FontAwesome5 name="prescription-bottle-alt" size={30} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
@@ -89,12 +104,13 @@ export default function PendingRequests( {navigation, route, item}) {
         {Object.keys(msg_payload[0])[0] === "5" ? <FontAwesome5 name="bed" size={30} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
 
       <View style={styles.listTextContainer}>
-        {Object.keys(msg_payload[0])[0] === "1" ? <Text style={styles.listTextHeader}>Pain/Medical Request</Text> : <Text style={{display: "none"}}></Text>}
-        {Object.keys(msg_payload[0])[0] === "2" ? <Text style={styles.listTextHeader}>Restroom Request</Text> : <Text style={{display: "none"}}></Text>}
-        {Object.keys(msg_payload[0])[0] === "3" ? <Text style={styles.listTextHeader}>General Request</Text> : <Text style={{display: "none"}}></Text>}
-        {Object.keys(msg_payload[0])[0] === "4" ? <Text style={styles.listTextHeader}>Dining Request</Text> : <Text style={{display: "none"}}></Text>}
-        {Object.keys(msg_payload[0])[0] === "5" ? <Text style={styles.listTextHeader}>Housekeeping Request</Text> : <Text style={{display: "none"}}></Text>}
-        {/* <Text style={styles.listTextSubheader}>Room {roomNumber}</Text> */}
+        <Text style={styles.listTextHeader}>{name}</Text>
+        {Object.keys(msg_payload[0])[0] === "1" ? <Text style={styles.listTextSubheader}>Pain/Medical Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "2" ? <Text style={styles.listTextSubheader}>Restroom Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "3" ? <Text style={styles.listTextSubheader}>General Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "4" ? <Text style={styles.listTextSubheader}>Dining Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "5" ? <Text style={styles.listTextSubheader}>Housekeeping Request</Text> : <Text style={{display: "none"}}></Text>}
+        
         <Text style={styles.listTextTertiary}>{new Date(timestamp).toLocaleString('en-US')}</Text>
       </View>
       <View style={styles.badgeAndCaretContainer}>
@@ -131,8 +147,14 @@ export default function PendingRequests( {navigation, route, item}) {
   );
 
   const renderItem = ({ item }) => {
+    let name = "";
     if(item.status === "error"){
-        return <Item patient_id={item.patient_id} provider_id={item.provider_id} timestamp={item.req_timestamp} status={item.status} message_id={item.message_id} msg_payload={item.msg_payload} />
+        allPatient.forEach(patient => {
+          if(patient.patient_id === item.patient_id){
+            name = patient.name;
+          }
+        })
+        return <Item name={name} patient_id={name} provider_id={item.provider_id} timestamp={item.req_timestamp} status={item.status} message_id={item.message_id} msg_payload={item.msg_payload} />
     }
   };
 

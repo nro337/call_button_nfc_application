@@ -33,6 +33,8 @@ import { FontAwesome5 } from '@expo/vector-icons';
 export default function AcceptedRequests({ navigation, route }) {
   const [reqHeader, setReqHeader] = useState('')
   const [allReq, setAllReq] = useState([]);
+  const [allStaff, setAllStaff] = useState([]);
+  const [allPatient, setAllPatient] = useState([]);
 
   useEffect(() => {
     fetch(`http://${dbConfig.mobileURL}:5000/patient-requests`)
@@ -64,22 +66,72 @@ export default function AcceptedRequests({ navigation, route }) {
       .then((data3) => {
         data3.forEach(staff => {
           // console.log(staff)
+          setAllStaff(allStaff => [...allStaff, staff])
         })
         //setReqHeader(data[0].patient_id)
       })
   }, [])
 
-  const Item = ({ name, roomNumber, icon, requestType, order }) => (
+  useEffect(() => {
+    fetch(`http://${dbConfig.mobileURL}:5000/patient`)
+      .then((resp4) => resp4.json())
+      .then((data4) => {
+        data4.forEach(patient => {
+          //console.log(patient)
+          setAllPatient(allPatient => [...allPatient, patient])
+        })
+        //setReqHeader(data[0].patient_id)
+      })
+  }, [])
+
+  const Item = ({ patient_id, provider_id, timestamp, status, message_id, msg_payload, name }) => (
     <TouchableOpacity style={styles.listItem} onPress={() => console.log(name)}>
       {/* <FontAwesome5 name={icon} size={40} color="#090C68" /> */}
+
+        {Object.keys(msg_payload[0])[0] === "1" ? <FontAwesome5 name="prescription-bottle-alt" size={30} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "2" ? <FontAwesome5 name="toilet" size={30} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "3" ? <FontAwesome5 name="hand-holding-medical" size={30} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "4" ? <FontAwesome5 name="coffee" size={30} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "5" ? <FontAwesome5 name="bed" size={30} color="#090C68" /> : <Text style={{display: "none"}}></Text>}
+
       <View style={styles.listTextContainer}>
-        <Text style={styles.listTextHeader}>{name}</Text>
-        <Text style={styles.listTextSubheader}>Room {roomNumber}</Text>
-        <Text style={styles.listTextTertiary}>10 min ago</Text>
+      {/* <Text style={styles.listTextHeader}>{name}</Text> */}
+        {Object.keys(msg_payload[0])[0] === "1" ? <Text style={styles.listTextSubheader}>Pain/Medical Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "2" ? <Text style={styles.listTextSubheader}>Restroom Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "3" ? <Text style={styles.listTextSubheader}>General Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "4" ? <Text style={styles.listTextSubheader}>Dining Request</Text> : <Text style={{display: "none"}}></Text>}
+        {Object.keys(msg_payload[0])[0] === "5" ? <Text style={styles.listTextSubheader}>Housekeeping Request</Text> : <Text style={{display: "none"}}></Text>}
+
+        {/* <Text style={styles.listTextSubheader}>Room {roomNumber}</Text> */}
+        <Text style={styles.listTextTertiary}>{new Date(timestamp).toLocaleString('en-US')}</Text>
       </View>
       <View style={styles.badgeAndCaretContainer}>
         <View style={styles.badge}>
-            <Text style={{padding: 5, color: "white", fontSize: 10}}>{requestType}</Text>
+          {(Object.keys(msg_payload[0])[0] === "1" && Object.values(msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>HELP</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "1" && Object.values(msg_payload[0])[0] === "2") ? <Text style={styles.badgeText}>Medication - Tylenol</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "1" && Object.values(msg_payload[0])[0] === "3") ? <Text style={styles.badgeText}>Medication - Aleve</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "1" && Object.values(msg_payload[0])[0] === "4") ? <Text style={styles.badgeText}>Medication - Advil</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "1" && Object.values(msg_payload[0])[0] === "5") ? <Text style={styles.badgeText}>Medication - Motrin</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "1" && Object.values(msg_payload[0])[0] === "6") ? <Text style={styles.badgeText}>Medication - Celebrex</Text> : <Text style={{display: "none"}}></Text>}
+
+          {(Object.keys(msg_payload[0])[0] === "2" && Object.values(msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>Help to/from Restroom</Text> : <Text style={{display: "none"}}></Text>}
+
+          {(Object.keys(msg_payload[0])[0] === "3" && Object.values(msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>Help Getting Out of Bed</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "3" && Object.values(msg_payload[0])[0] === "2") ? <Text style={styles.badgeText}>Change gauze/bandages</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "3" && Object.values(msg_payload[0])[0] === "3") ? <Text style={styles.badgeText}>Counseling patient/family</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "3" && Object.values(msg_payload[0])[0] === "4") ? <Text style={styles.badgeText}>Control Lighting</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "3" && Object.values(msg_payload[0])[0] === "5") ? <Text style={styles.badgeText}>Change Thermostat</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "3" && Object.values(msg_payload[0])[0] === "6") ? <Text style={styles.badgeText}>Request shower/wash assistance</Text> : <Text style={{display: "none"}}></Text>}
+
+          {(Object.keys(msg_payload[0])[0] === "4" && Object.values(msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>Request shower/wash assistance</Text> : <Text style={{display: "none"}}></Text>}
+
+          {(Object.keys(msg_payload[0])[0] === "5" && Object.values(msg_payload[0])[0] === "1") ? <Text style={styles.badgeText}>Request Blankets</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "5" && Object.values(msg_payload[0])[0] === "2") ? <Text style={styles.badgeText}>Request Pillow</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "5" && Object.values(msg_payload[0])[0] === "3") ? <Text style={styles.badgeText}>Request Room Cleaning</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "5" && Object.values(msg_payload[0])[0] === "4") ? <Text style={styles.badgeText}>Out of Toilet Paper</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "5" && Object.values(msg_payload[0])[0] === "5") ? <Text style={styles.badgeText}>Out of Tissues</Text> : <Text style={{display: "none"}}></Text>}
+          {(Object.keys(msg_payload[0])[0] === "5" && Object.values(msg_payload[0])[0] === "6") ? <Text style={styles.badgeText}>Out of Soap</Text> : <Text style={{display: "none"}}></Text>}
+            {/* <Text style={{padding: 5, color: "white", fontSize: 10}}>{requestType}</Text> */}
         </View>
         <Ionicons name="chevron-forward-outline" size={40} color="#090C68" />
       </View>
@@ -87,7 +139,15 @@ export default function AcceptedRequests({ navigation, route }) {
   );
 
   const renderItem = ({ item }) => {
-    return <Item name={item.patient_id} roomNumber={item.patient_id} icon={item.patient_id} requestType={item.patient_id} order={item.patient_id} />
+    let name = "";
+    if(item.status === "accepted"){
+        allPatient.forEach(patient => {
+          if(patient.patient_id === item.patient_id){
+            name = patient.name;
+          }
+        })
+        return <Item name={name} patient_id={name} provider_id={item.provider_id} timestamp={item.req_timestamp} status={item.status} message_id={item.message_id} msg_payload={item.msg_payload} />
+    }
   };
 
   return (
@@ -255,6 +315,11 @@ const styles = StyleSheet.create({
   badge: {
       borderRadius: 16,
       backgroundColor: "#090C68",
+  },
+  badgeText: {
+    padding: 5, 
+    color: "white", 
+    fontSize: 10
   },
   topTabContainer: {
     width: Dimensions.get("window").width,
